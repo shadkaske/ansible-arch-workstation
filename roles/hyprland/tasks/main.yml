@@ -41,5 +41,6 @@
     - waybar
     - rofi
     - dunst
+    - kitty
 
 # vim: ft=yaml.ansible
