@@ -3,15 +3,16 @@
   community.general.pacman:
     state: present
     package:
-      - zsh
-      - tmux
-      - eza
       - bat
-      - zoxide
+      - eza
       - fd
+      - lazygit
+      - ranger
       - ripgrep
       - starship
-      - ranger
+      - tmux
+      - zoxide
+      - zsh
 
 - name: Stow shell configs
   become: false
@@ -59,5 +60,18 @@
     update: false
   with_items: "{{ zsh_plugins }}"
   tags: skip_ansible_lint
+
+- name: Stow bin, share and cli configs
+  tags: skip_ansible_lint
+  ansible.builtin.command:
+    cmd: "stow {{ item }}"
+    chdir: "{{ dotfiles_path }}"
+  with_items:
+    - bin
+    - share
+    - fd
+    - bat
+    - git
+    - lazygit
 
 # vim: ft=yaml.ansible

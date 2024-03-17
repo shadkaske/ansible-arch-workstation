@@ -20,7 +20,6 @@
 - name: Install xdg-user-dirs Packages
   community.general.pacman:
     state: present
-    extra_args: --needed
     package: xdg-user-dirs
 
 - name: Create User Directories
@@ -32,9 +31,10 @@
 - name: Clone Dotfiles
   become: false
   ansible.builtin.git:
-    repo: https://github.com/shadkaske/dotfiles
+    repo: git@github.com:shadkaske/dotfiles
     dest: "{{ dotfiles_path }}"
-    update: false
+    update: true
+    accept_hostkey: true
     version: master
 
 - name: Set Up Shell Configs
@@ -42,5 +42,12 @@
 
 - name: Set Up ranger
   ansible.builtin.include_tasks: ranger.yml
+
+- name: Set User Shell to Zsh and Add groups
+  ansible.builtin.user:
+    name: "{{ ansible_ssh_user }}"
+    groups: docker,libvirt,qemu,libvirt-qemu
+    append: true
+    shell: /bin/zsh
 
 # vim: ft=yaml.ansible
