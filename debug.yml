@@ -1,0 +1,12 @@
+---
+- name: Arch Workstation Install
+  hosts: arch
+  remote_user: shadkaske
+  become: true
+
+  tasks:
+    - name: Spit out user name
+      ansible.builtin.debug:
+        msg: "{{ ansible_user }}"
+
+# vim: ft=yaml.ansible

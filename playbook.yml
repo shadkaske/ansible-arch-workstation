@@ -1,0 +1,80 @@
+---
+- name: Arch Workstation Install
+  hosts: arch
+  remote_user: shadkaske
+  become: true
+
+  roles:
+    - libvirt
+
+  pre_tasks:
+    - name: Update System Packages
+      community.general.pacman:
+        update_cache: true
+        upgrade: true
+
+    - name: Install AMD GPU Packages
+      community.general.pacman:
+        state: present
+        package:
+          - mesa
+          - lib32-mesa
+          - vulkan-radeon
+          - lib32-vulkan-radeon
+          - libva-mesa-driver
+          - lib32-libva-mesa-driver
+          - mesa-vdpau
+          - lib32-mesa-vdpau
+
+    - name: Set up XDG User Directories
+      block:
+        - name: Install xdg-user-dirs Packages
+          community.general.pacman:
+            state: present
+            extra_args: --needed
+            package: xdg-user-dirs
+
+        - name: Create User Directories
+          become: false
+          ansible.builtin.command:
+            cmd: /usr/bin/xdg-user-dirs-update
+            creates: "{{ ansible_env.HOME }}/.config/user-dirs.dirs"
+
+    - name: Install AUR Helper
+      block:
+        - name: Allow Ansible User to use pacman
+          ansible.builtin.lineinfile:
+            path: /etc/sudoers.d/11-install-aur_helper
+            line: 'shadkaske ALL=(ALL) NOPASSWD: /usr/bin/pacman'
+            create: true
+            mode: "0644"
+            owner: root
+            group: root
+            validate: 'visudo -cf %s'
+
+        - name: Install Paru
+          become: false
+          kewlfft.aur.aur:
+            name: paru
+            use: makepkg
+            state: present
+
+    - name: User Configuration
+      block:
+        - name: Set User Shell to Zsh and Add groups
+          ansible.builtin.user:
+            name: "{{ ansible_user }}"
+            groups: docker,libvirt,qemu,libvirt-qemu
+            append: true
+            shell: /bin/zsh
+
+        - name: Clone Dotfiles
+          become: false
+          ansible.builtin.git:
+            repo: https://github.com/shadkaske/dotfiles
+            dest: "/home/{{ ansible_user }}/.dotfiles"
+            update: false
+            version: master
+
+
+# vim: ft=yaml.ansible

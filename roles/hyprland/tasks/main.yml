@@ -1,0 +1,21 @@
+---
+- name: Install Hyprland Packages
+  community.general.pacman:
+    state: present
+    package:
+      - hyprland
+      - xdg-desktop-portal-hyprland
+      - waybar
+      - hyprpaper
+
+- name: Install Hypland Aur Packages
+  kewlfft.aur.aur:
+    state: present
+    use: paru
+    name:
+      - hypridle
+      - hyprlock
+      - rofi-lbonn-wayland
+      - pyprland
+
+# vim: ft=yaml.ansible

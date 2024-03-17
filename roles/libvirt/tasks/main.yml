@@ -1,0 +1,37 @@
+---
+- name: Install Libvirt
+  community.general.pacman:
+    state: present
+    package:
+      - libvirt
+      - qemu-full
+      - virt-manager
+      - virt-viewer
+      - dnsmasq
+      - vde2
+      - bridge-utils
+      - openbsd-netcat
+      - dmidecode
+      - libguestfs
+
+- name: Configure Libvirt to Use libvirt group
+  ansible.builtin.lineinfile:
+    path: /etc/libvirt/libvirtd.conf
+    line: unix_sock_group = "libvirt"
+    state: present
+    regexp: '^#unix_sock_group = "libvirt"'
+
+- name: Configure Libvirt Read Write Permissions
+  ansible.builtin.lineinfile:
+    path: /etc/libvirt/libvirtd.conf
+    line: unix_sock_group = "0770"
+    state: present
+    regexp: '^#unix_sock_rw_perms = "0770"'
+
+- name: Enable and Start Libvirt
+  ansible.builtin.service:
+    name: libvirtd
+    enabled: true
+    state: restarted
+
+# vim: ft=yaml.ansible
