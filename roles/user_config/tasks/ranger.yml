@@ -1,0 +1,24 @@
+---
+- name: Stow Ranger Configs
+  become: false
+  ansible.builtin.command:
+    cmd: /usr/bin/stow ranger
+    chdir: "{{ dotfiles_path }}"
+    creates: "{{ config_path }}/ranger"
+
+- name: Create Ranger Plugins Directory
+  ansible.builtin.file:
+    path: "{{ config_path }}/ranger/plugins"
+    state: directory
+    owner: "{{ ansible_ssh_user }}"
+    group: "{{ ansible_ssh_user }}"
+    mode: "0755"
+
+- name: Clone Ranger Devicons
+  become: false
+  ansible.builtin.git:
+    repo: https://github.com/alexanderjeurissen/ranger_devicons
+    dest: "{{ config_path }}/ranger/plugins/ranger_devicons"
+    update: false
+    version: main
+# vim: ft=yaml.ansible

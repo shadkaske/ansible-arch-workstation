@@ -1,4 +1,10 @@
 ---
-dotfiles_path: "/home/{{ ansible_user }}/.dotfiles"
+dotfiles_path: "/home/{{ ansible_ssh_user }}/.dotfiles"
 
-config_path: "/home/{{ ansible_user }}/.config"
+config_path: "/home/{{ ansible_ssh_user }}/.config"
+
+share_path: "/home/{{ ansible_ssh_user }}/.local/share"
+
+bin_path: "/home/{{ ansible_ssh_user }}/.local/bin"
+
+my_user: "{{ ansible_ssh_user }}"

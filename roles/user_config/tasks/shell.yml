@@ -1,0 +1,63 @@
+---
+- name: Install Shell Packages
+  community.general.pacman:
+    state: present
+    package:
+      - zsh
+      - tmux
+      - eza
+      - bat
+      - zoxide
+      - fd
+      - ripgrep
+      - starship
+      - ranger
+
+- name: Stow shell configs
+  become: false
+  ansible.builtin.command:
+    cmd: stow --adopt shell
+    creates: "/home/{{ ansible_ssh_user }}/.zshrc"
+    chdir: "{{ dotfiles_path }}"
+
+- name: Reset Dofiles git repo
+  become: false
+  ansible.builtin.command:
+    cmd: git reset HEAD --hard
+    chdir: "{{ dotfiles_path }}"
+  tags: skip_ansible_lint
+
+- name: Clone Oh My ZSH
+  become: false
+  ansible.builtin.git:
+    repo: https://github.com/ohmyzsh/ohmyzsh.git
+    dest: "{{ share_path }}/oh-my-zsh/"
+    update: false
+    version: master
+
+- name: Ensure Zsh Plugins Path Exists
+  ansible.builtin.file:
+    state: directory
+    path: "{{ zsh_plugins_path }}"
+    owner: "{{ ansible_ssh_user }}"
+    group: "{{ ansible_ssh_user }}"
+    mode: "0755"
+
+- name: Ensure Zsh Themes Path Exists
+  ansible.builtin.file:
+    state: directory
+    path: "{{ zsh_themes_path }}"
+    owner: "{{ ansible_ssh_user }}"
+    group: "{{ ansible_ssh_user }}"
+    mode: "0755"
+
+- name: Install ZSH Plugins
+  become: false
+  ansible.builtin.git:
+    repo: "{{ item.repo }}"
+    dest: "{{ zsh_plugins_path }}/{{ item.name }}"
+    update: false
+  with_items: "{{ zsh_plugins }}"
+  tags: skip_ansible_lint
+
+# vim: ft=yaml.ansible

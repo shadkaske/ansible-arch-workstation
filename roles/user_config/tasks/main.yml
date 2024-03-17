@@ -1,0 +1,46 @@
+---
+- name: Ensure Local Share Exists
+  ansible.builtin.file:
+    state: directory
+    recurse: true
+    path: "{{ share_path }}"
+    owner: "{{ ansible_ssh_user }}"
+    group: "{{ ansible_ssh_user }}"
+    mode: "0755"
+
+- name: Ensure Local Bin Exists
+  ansible.builtin.file:
+    state: directory
+    recurse: true
+    path: "{{ bin_path }}"
+    owner: "{{ ansible_ssh_user }}"
+    group: "{{ ansible_ssh_user }}"
+    mode: "0755"
+
+- name: Install xdg-user-dirs Packages
+  community.general.pacman:
+    state: present
+    extra_args: --needed
+    package: xdg-user-dirs
+
+- name: Create User Directories
+  become: false
+  ansible.builtin.command:
+    cmd: /usr/bin/xdg-user-dirs-update
+    creates: "{{ ansible_env.HOME }}/.config/user-dirs.dirs"
+
+- name: Clone Dotfiles
+  become: false
+  ansible.builtin.git:
+    repo: https://github.com/shadkaske/dotfiles
+    dest: "{{ dotfiles_path }}"
+    update: false
+    version: master
+
+- name: Set Up Shell Configs
+  ansible.builtin.include_tasks: shell.yml
+
+- name: Set Up ranger
+  ansible.builtin.include_tasks: ranger.yml
+
+# vim: ft=yaml.ansible

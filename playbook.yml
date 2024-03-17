@@ -6,13 +6,77 @@
 
   roles:
     - libvirt
+    - user_config
     - hyprland
 
+    # TODO: Configure Firewall
+    # TODO: Tailscale
+    # TODO: Duo
+    # TODO: Repos
+
   pre_tasks:
-    - name: Update System Packages
-      community.general.pacman:
-        update_cache: true
-        upgrade: true
+    - name: Pacman and Updates
+      tags: pacman
+      block:
+        - name: Pacman Use Color
+          ansible.builtin.lineinfile:
+            path: /etc/pacman.conf
+            line: "Color"
+            state: present
+            regexp: "^#Color"
+
+        - name: Pacman Use 5 Parallel Downloads
+          ansible.builtin.lineinfile:
+            path: /etc/pacman.conf
+            line: "ParallelDownloads = 5"
+            state: present
+            regexp: "^#ParallelDownloads.*"
+
+        - name: Ilovecandy
+          ansible.builtin.lineinfile:
+            path: /etc/pacman.conf
+            regexp: "^ILoveCandy"
+            insertafter: "^#UseSyslog"
+            line: "ILoveCandy"
+
+        - name: Install Reflector
+          community.general.pacman:
+            state: present
+            package: reflector
+            update_cache: true
+
+        - name: Set Country Configuration in Reflector
+          ansible.builtin.lineinfile:
+            path: /etc/xdg/reflector/reflector.conf
+            line: --country "United States"
+            state: present
+            regexp: "^# --country.*$"
+
+        - name: Set Sorting for Reflector
+          ansible.builtin.lineinfile:
+            path: /etc/xdg/reflector/reflector.conf
+            line: --sort rate
+            state: present
+            regexp: "--sort age"
+
+        - name: Enable Reflector Timer
+          ansible.builtin.systemd_service:
+            name: reflector.timer
+            state: started
+            enabled: true
+
+        - name: Run Reflector Service to Update Mirrors
+          ansible.builtin.systemd_service:
+            name: reflector.service
+            state: started
+
+        - name: Update Pacman Cache
+          community.general.pacman:
+            update_cache: true
+
+        - name: Update System Packages
+          community.general.pacman:
+            upgrade: true
 
     - name: Install AMD GPU Packages
       community.general.pacman:
@@ -27,31 +91,25 @@
           - mesa-vdpau
           - lib32-mesa-vdpau
 
-    - name: Install Stow
+    - name: Install PreRequisite Packages
       community.general.pacman:
         state: present
-        package: stow
-
-    - name: Set up XDG User Directories
-      block:
-        - name: Install xdg-user-dirs Packages
-          community.general.pacman:
-            state: present
-            extra_args: --needed
-            package: xdg-user-dirs
-
-        - name: Create User Directories
-          become: false
-          ansible.builtin.command:
-            cmd: /usr/bin/xdg-user-dirs-update
-            creates: "{{ ansible_env.HOME }}/.config/user-dirs.dirs"
+        package:
+          - stow
+          - docker
+          - docker-compose
+          - git
+          - python
+          - zsh
+          - starship
+          - tmux
 
     - name: Install AUR Helper
       block:
         - name: Allow Ansible User to use pacman
           ansible.builtin.lineinfile:
             path: /etc/sudoers.d/11-install-aur_helper
-            line: 'shadkaske ALL=(ALL) NOPASSWD: /usr/bin/pacman'
+            line: "{{ ansible_ssh_user }} ALL=(ALL) NOPASSWD: /usr/bin/pacman"
             create: true
             mode: "0644"
             owner: root
@@ -65,22 +123,12 @@
             use: makepkg
             state: present
 
-    - name: User Configuration
-      block:
-        - name: Set User Shell to Zsh and Add groups
-          ansible.builtin.user:
-            name: "{{ ansible_user }}"
-            groups: docker,libvirt,qemu,libvirt-qemu
-            append: true
-            shell: /bin/zsh
-
-        - name: Clone Dotfiles
-          become: false
-          ansible.builtin.git:
-            repo: https://github.com/shadkaske/dotfiles
-            dest: "/home/{{ ansible_user }}/.dotfiles"
-            update: false
-            version: master
-
+  tasks:
+    - name: Set User Shell to Zsh and Add groups
+      ansible.builtin.user:
+        name: "{{ ansible_ssh_user }}"
+        groups: docker,libvirt,qemu,libvirt-qemu
+        append: true
+        shell: /bin/zsh
 
 # vim: ft=yaml.ansible

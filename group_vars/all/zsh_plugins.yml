@@ -1,0 +1,22 @@
+---
+zsh_themes_path: "{{ share_path }}/zsh-custom/themes"
+
+zsh_plugins_path: "{{ share_path }}/zsh-custom/plugins"
+
+zsh_plugins:
+  - name: artisan
+    repo: https://github.com/jessarcher/zsh-artisan.git
+  - name: zsh-eza
+    repo: https://github.com/z-shell/zsh-eza.git
+  - name: fast-syntax-highlighting
+    repo: https://github.com/zdharma-continuum/fast-syntax-highlighting.git
+  - name: zsh-autosuggestions
+    repo: https://github.com/zsh-users/zsh-autosuggestions.git
+  - name: zsh-bat
+    repo: https://github.com/fdellwing/zsh-bat
+  - name: zsh-vi-mode
+    repo: https://github.com/jeffreytse/zsh-vi-mode
+  - name: sail
+    repo: https://github.com/marcandreappel/sail
+  - name: autoswitch_virtualenv
+    repo: https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv
