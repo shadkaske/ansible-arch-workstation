@@ -5,8 +5,10 @@
   become: true
 
   tasks:
-    - name: Spit out user name
-      ansible.builtin.debug:
-        msg: "{{ dotfiles_path }}"
-
+    - name: Ilovecandy
+      ansible.builtin.lineinfile:
+        path: /etc/pacman.conf
+        regexp: "^ILoveCandy"
+        insertafter: "^#UseSyslog"
+        line: "ILoveCandy"
 # vim: ft=yaml.ansible
