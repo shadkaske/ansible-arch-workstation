@@ -1,0 +1,20 @@
+---
+- name: Install Required Packages for Neovim
+  community.general.pacman:
+    state: present
+    package:
+      - neovim
+      - nodejs
+      - npm
+      - python-pynvim
+
+- name: Clone my Neovim Config
+  become: false
+  ansible.builtin.git:
+    repo: git@github.com:shadkaske/neovim-kick
+    dest: "{{ config_path }}/nvim"
+    version: main
+    accept_hostkey: true
+    update: false
+
+# vim: ft=yaml.ansible
