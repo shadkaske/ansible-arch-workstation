@@ -8,11 +8,17 @@
     - libvirt
     - user_config
     - hyprland
+    - neovim
 
     # TODO: Configure Firewall
     # TODO: Tailscale
     # TODO: Duo
+    # TODO: gnome-keyring
+    # TODO: gnome-polkit
     # TODO: Repos
+    # TODO: Configure Snapper
+    # TODO: Install Apps
+    # TODO: OneDrive
 
   pre_tasks:
     - name: Pacman and Updates
@@ -122,13 +128,4 @@
             name: paru
             use: makepkg
             state: present
-
-  tasks:
-    - name: Set User Shell to Zsh and Add groups
-      ansible.builtin.user:
-        name: "{{ ansible_ssh_user }}"
-        groups: docker,libvirt,qemu,libvirt-qemu
-        append: true
-        shell: /bin/zsh
-
 # vim: ft=yaml.ansible
