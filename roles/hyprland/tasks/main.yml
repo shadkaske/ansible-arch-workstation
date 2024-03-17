@@ -7,8 +7,20 @@
       - xdg-desktop-portal-hyprland
       - waybar
       - hyprpaper
+      - kitty
+      - kitty-shell-integration
+      - kitty-terminfo
+      - udiskie
+      - dunst
+      - wl-clipboard
+      - cliphist
+      - ttf-nerd-fonts-symbols
+      - ttf-nerd-fonts-symbols-common
+      - ttf-nerd-fonts-symbols-mono
+      - ttf-jetbrains-mono-nerd
 
 - name: Install Hypland Aur Packages
+  become: false
   kewlfft.aur.aur:
     state: present
     use: paru
@@ -17,5 +29,17 @@
       - hyprlock
       - rofi-lbonn-wayland
       - pyprland
+
+- name: Stow Hyprland Configs
+  become: false
+  ansible.builtin.command:
+    cmd: "/usr/bin/stow --adopt {{ item }}"
+    chdir: "{{ dotfiles_path }}"
+    creates: "{{ config_path }}/{{ item }}"
+  with_items:
+    - hyprland
+    - waybar
+    - rofi
+    - dunst
 
 # vim: ft=yaml.ansible

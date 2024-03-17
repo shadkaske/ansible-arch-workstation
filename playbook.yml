@@ -6,6 +6,7 @@
 
   roles:
     - libvirt
+    - hyprland
 
   pre_tasks:
     - name: Update System Packages
@@ -25,6 +26,11 @@
           - lib32-libva-mesa-driver
           - mesa-vdpau
           - lib32-mesa-vdpau
+
+    - name: Install Stow
+      community.general.pacman:
+        state: present
+        package: stow
 
     - name: Set up XDG User Directories
       block:

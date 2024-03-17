@@ -7,6 +7,6 @@
   tasks:
     - name: Spit out user name
       ansible.builtin.debug:
-        msg: "{{ ansible_user }}"
+        msg: "{{ dotfiles_path }}"
 
 # vim: ft=yaml.ansible
