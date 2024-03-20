@@ -59,65 +59,77 @@
     state: present
     name: bitwarden
 
-- name: Install Printer and Scanner Support
-  community.general.pacman:
-    state: present
-    name:
-      - cups
-      - cups-pdf
-      - hplip
-      - sane
-      - simple-scan
-
-- name: Install IBM iAccess Client
-  become: false
-  kewlfft.aur.aur:
-    state: present
-    use: paru
-    name: iacs
-
-- name: Install DBeaver
-  community.general.pacman:
-    state: present
-    name: dbeaver
-
-- name: Install PHPStorm
+- name: Install Work Applications
+  tags: work_apps
   block:
-    - name: Install PHPStorm Aur Package
+    - name: Install Printer and Scanner Support
+      community.general.pacman:
+        state: present
+        name:
+          - cups
+          - cups-pdf
+          - hplip
+          - sane
+          - simple-scan
+
+    - name: Install IBM iAccess Client
       become: false
       kewlfft.aur.aur:
         state: present
-        name: phpstorm
+        use: paru
+        name: iacs
+
+    - name: Install Onedrive Client
+      tags: onedrive
+      become: false
+      kewlfft.aur.aur:
+        state: present
+        use: paru
+        name: onedrive-abraunegg
+
+    - name: Install DBeaver
+      community.general.pacman:
+        state: present
+        name: dbeaver
+
+    - name: Install PHPStorm
+      tags: phpstorm
+      block:
+        - name: Install PHPStorm Aur Package
+          become: false
+          kewlfft.aur.aur:
+            state: present
+            name: phpstorm
+            use: paru
+
+        - name: Stow ideavim Config
+          ansible.builtin.command:
+            cmd: stow ideavim
+            chdir: "{{ dotfiles_path }}"
+            creates: "{{ config_path }}/ideavim"
+
+    - name: Install Remmina
+      community.general.pacman:
+        state: present
+        name:
+          - freerdp
+          - libvncserver
+          - remmina
+          - spice-gtk
+
+    - name: Install Todoist
+      become: false
+      kewlfft.aur.aur:
+        state: present
+        name: todoist-appimage-integration
         use: paru
 
-    - name: Stow ideavim Config
-      ansible.builtin.command:
-        cmd: stow ideavim
-        chdir: "{{ dotfiles_path }}"
-        creates: "{{ config_path }}/ideavim"
-
-- name: Install Remmina
-  community.general.pacman:
-    state: present
-    name:
-      - freerdp
-      - libvncserver
-      - remmina
-      - spice-gtk
-
-- name: Install Todoist
-  become: false
-  kewlfft.aur.aur:
-    state: present
-    name: todoist-appimage-integration
-    use: paru
-
-- name: Install Teams
-  become: false
-  kewlfft.aur.aur:
-    state: present
-    name: teams-for-linux
-    use: paru
+    - name: Install Teams
+      become: false
+      kewlfft.aur.aur:
+        state: present
+        name: teams-for-linux
+        use: paru
 
 - name: Install Personal Apps
   tags: personal_apps
