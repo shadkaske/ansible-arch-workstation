@@ -16,6 +16,14 @@
           - ttf-liberation
           - ttf-mona-sans
 
+    - name: Ensure the Firefox Policies Path Exists
+      ansible.builtin.file:
+        state: directory
+        path: /etc/firefox/policies/policies.json
+        owner: root
+        group: root
+        mode: "0755"
+
     - name: Copy Firefox Policies
       ansible.builtin.copy:
         src: files/policies.json
@@ -41,7 +49,6 @@
     state: present
     name:
       - bitwarden
-      - bitwarden-cli
 
 - name: Install Printer and Scanner Support
   community.general.pacman:
