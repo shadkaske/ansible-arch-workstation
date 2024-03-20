@@ -62,6 +62,40 @@
       with_items:
         - gtk
 
+    - name: Enable Themes, Icons, Etc with Dconf
+      become: false
+      tags: dconf
+      block:
+        - name: Enable GTK Icon Theme
+          community.general.dconf:
+            key: "/org/gnome/desktop/interface/icon-theme"
+            value: "'Papirus-Dark'"
+            state: present
+
+        - name: Enable Gtk Cursor Theme
+          community.general.dconf:
+            key: "/org/gnome/desktop/interface/cursor-theme"
+            value: "'Catppuccin-Mocha-Blue-Cursors'"
+            state: present
+
+        - name: Set Gtk Cursor Size
+          community.general.dconf:
+            key: "/org/gnome/desktop/interface/cursor-size"
+            value: 36
+            state: present
+
+        - name: Set Gtk Font AntiAliasing
+          community.general.dconf:
+            key: "/org/gnome/desktop/interface/font-antialiasing"
+            value: "'rgba'"
+            state: present
+
+        - name: Set Gtk Theme
+          community.general.dconf:
+            key: "/org/gnome/desktop/interface/gtk-theme"
+            value: "'Catppuccin-Macchiato-Standard-Blue-Dark'"
+            state: present
+
 - name: Stow Hyprland Configs
   become: false
   ansible.builtin.command:
