@@ -15,6 +15,13 @@
       - zoxide
       - zsh
 
+- name: Install Gitflow
+  become: false
+  kewlfft.aur.aur:
+    state: present
+    name: gitflow-avh
+    use: paru
+
 - name: Stow shell configs
   become: false
   ansible.builtin.command:
