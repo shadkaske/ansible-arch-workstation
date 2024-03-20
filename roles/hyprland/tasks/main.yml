@@ -33,24 +33,34 @@
       - rofi-lbonn-wayland
       - pyprland
 
-- name: Install GTK Icon Theme
+- name: Set Up Gtk Themeing
   tags: gtk_themes
-  community.general.pacman:
-    state: present
-    name: papirus-icon-theme
+  block:
+    - name: Install GTK Icon Theme
+      community.general.pacman:
+        state: present
+        name: papirus-icon-theme
 
-- name: Install GTK Themes and Cursors
-  become: false
-  tags: gtk_themes
-  kewlfft.aur.aur:
-    state: present
-    use: paru
-    name:
-      - papirus-folders-catppuccin-git
-      - catppuccin-cursors-mocha
-      - catppuccin-cursors-macchiato
-      - catppuccin-gtk-theme-mocha
-      - catppuccin-gtk-theme-macchiato
+    - name: Install GTK Themes and Cursors
+      become: false
+      kewlfft.aur.aur:
+        state: present
+        use: paru
+        name:
+          - papirus-folders-catppuccin-git
+          - catppuccin-cursors-mocha
+          - catppuccin-cursors-macchiato
+          - catppuccin-gtk-theme-mocha
+          - catppuccin-gtk-theme-macchiato
+
+    - name: Stow Gtk Configs
+      become: false
+      ansible.builtin.command:
+        cmd: "/usr/bin/stow --adopt {{ item }}"
+        chdir: "{{ dotfiles_path }}"
+        creates: "{{ config_path }}/{{ item }}"
+      with_items:
+        - gtk
 
 - name: Stow Hyprland Configs
   become: false
