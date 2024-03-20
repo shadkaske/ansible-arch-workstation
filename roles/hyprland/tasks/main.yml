@@ -7,6 +7,7 @@
       - dunst
       - hyprland
       - hyprpaper
+      - imagemagick
       - kitty
       - kitty-shell-integration
       - kitty-terminfo
@@ -120,7 +121,7 @@
 - name: Add Gnome Keyring to Pam Login
   ansible.builtin.lineinfile:
     path: /etc/pam.d/login
-    line: "auth       optional     pame_gnome_keyring.so"
+    line: "auth       optional     pam_gnome_keyring.so"
     insertafter: "^auth *include *system-local-login"
 
 - name: Autostart Gnome Keyring after Session Login
