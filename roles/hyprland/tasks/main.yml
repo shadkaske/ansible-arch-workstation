@@ -47,4 +47,37 @@
     - dunst
     - kitty
 
+- name: Install Gnome Keyring
+  community.general.pacman:
+    state: present
+    package:
+      - gnome-keyring
+      - libsecret
+      - seahorse
+
+- name: Add Gnome Keyring to Pam Login
+  ansible.builtin.lineinfile:
+    path: /etc/pam.d/login
+    line: "auth       optional     pame_gnome_keyring.so"
+    insertafter: "^auth *include *system-local-login"
+
+- name: Autostart Gnome Keyring after Session Login
+  ansible.builtin.lineinfile:
+    path: /etc/pam.d/login
+    line: "session    optional     pam_gnome_keyring.so auto_start"
+    insertafter: "^session *include *system-local-login"
+
+- name: Enable User Service for gcr-ssh-agent
+  become: false
+  ansible.builtin.systemd_service:
+    name: gcr-ssh-agent.service
+    enabled: true
+    state: restarted
+    scope: user
+
+- name: Install Polkit Packages
+  community.general.pacman:
+    name: polkit-gnome
+    state: present
+
 # vim: ft=yaml.ansible
