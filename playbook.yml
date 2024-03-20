@@ -11,12 +11,9 @@
     - neovim
     - applications
 
-    # TODO: Install Apps
     # TODO: Configure Firewall
     # TODO: Tailscale
     # TODO: Duo
-    # TODO: gnome-keyring
-    # TODO: gnome-polkit
     # TODO: Repos
     # TODO: Configure Snapper
     # TODO: OneDrive
