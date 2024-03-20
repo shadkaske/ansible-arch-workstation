@@ -1,4 +1,5 @@
 arch:
   hosts:
-    test_vm:
-      ansible_host: 192.168.122.55
+    local:
+      ansible_host: localhost
+      ansible_connection: local

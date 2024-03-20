@@ -2,19 +2,15 @@
 - name: Arch Workstation Install
   hosts: arch
   remote_user: shadkaske
+  connection: local
   become: true
 
   tasks:
-    - name: Enable User Service for gcr-ssh-agent
-      become: false
-      ansible.builtin.systemd:
-        name: gcr-ssh-agent.socket
-        enabled: true
-        state: started
-        scope: user
-
-    - name: Install Polkit Packages
+    - name: Install Man Pages
       community.general.pacman:
-        name: polkit-gnome
         state: present
+        name:
+          - man-db
+          - less
+          - man-pages
 # vim: ft=yaml.ansible

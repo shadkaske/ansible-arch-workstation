@@ -126,4 +126,21 @@
             name: paru
             use: makepkg
             state: present
+  tasks:
+    - name: Install Bluetooth Support
+      tags: bluetooth
+      block:
+        - name: Install Bluetooth Packages
+          community.general.pacman:
+            state: present
+            name:
+              - bluez
+              - bluez-utils
+              - blueman
+
+        - name: Enable and Start Bluetooth Service
+          ansible.builtin.systemd_service:
+            enabled: true
+            state: restarted
+            name: bluetooth.service
 # vim: ft=yaml.ansible

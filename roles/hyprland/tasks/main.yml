@@ -3,7 +3,6 @@
   community.general.pacman:
     state: present
     package:
-      - blueman
       - cliphist
       - dunst
       - hyprland
@@ -33,6 +32,25 @@
       - hyprlock
       - rofi-lbonn-wayland
       - pyprland
+
+- name: Install GTK Icon Theme
+  tags: gtk_themes
+  community.general.pacman:
+    state: present
+    name: papirus-icon-theme
+
+- name: Install GTK Themes and Cursors
+  become: false
+  tags: gtk_themes
+  kewlfft.aur.aur:
+    state: present
+    use: paru
+    name:
+      - papirus-folders-catppuccin-git
+      - catppuccin-cursors-mocha
+      - catppuccin-cursors-macchiato
+      - catppuccin-gtk-theme-mocha
+      - catppuccin-gtk-theme-macchiato
 
 - name: Stow Hyprland Configs
   become: false
