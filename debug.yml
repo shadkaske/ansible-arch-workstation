@@ -7,9 +7,10 @@
 
   tasks:
     - name: Install Gitflow
-      become: false
-      kewlfft.aur.aur:
+      community.general.pacman:
+      # become: false
+      # kewlfft.aur.aur:
         state: present
-        name: gitflow-avh
-        use: paru
+        name: imagemagick
+        # use: paru
 # vim: ft=yaml.ansible

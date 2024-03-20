@@ -1,5 +1,6 @@
 ---
 - name: Set up Firefox
+  tags: firefox
   block:
     - name: Install Firefox
       community.general.pacman:
@@ -19,7 +20,7 @@
     - name: Ensure the Firefox Policies Path Exists
       ansible.builtin.file:
         state: directory
-        path: /etc/firefox/policies/policies.json
+        path: /etc/firefox/policies
         owner: root
         group: root
         mode: "0755"
