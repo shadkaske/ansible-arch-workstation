@@ -100,13 +100,34 @@
         state: present
         package:
           - stow
-          - docker
-          - docker-compose
           - git
+          - gitflow-avh
           - python
           - zsh
           - starship
           - tmux
+
+    - name: Enable Docker Support
+      tags: docker
+      block:
+        - name: Install Docker Packages
+          community.general.pacman:
+            state: present
+            package:
+              - docker
+              - docker-compose
+
+        - name: Enable and Start Docker Service
+          ansible.builtin.systemd_service:
+            state: restarted
+            enabled: true
+            name: docker.service
+
+        - name: Add User to Docker Group
+          ansible.builtin.user:
+            name: "{{ ansible_ssh_user }}"
+            groups: docker
+            append: true
 
     - name: Install AUR Helper
       block:

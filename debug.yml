@@ -6,11 +6,10 @@
   become: true
 
   tasks:
-    - name: Install Man Pages
-      community.general.pacman:
+    - name: Install Gitflow
+      become: false
+      kewlfft.aur.aur:
         state: present
-        name:
-          - man-db
-          - less
-          - man-pages
+        name: gitflow-avh
+        use: paru
 # vim: ft=yaml.ansible
