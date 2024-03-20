@@ -39,16 +39,24 @@
     use: paru
     name: google-chrome
 
+- name: Install Man Pages
+  community.general.pacman:
+    state: present
+    name:
+      - man-db
+      - less
+      - man-pages
+
 - name: Install File Manager
   community.general.pacman:
     state: present
     name: pcmanfm
 
 - name: Install Bitwarden
+  tags: bitwarden
   community.general.pacman:
     state: present
-    name:
-      - bitwarden
+    name: bitwarden
 
 - name: Install Printer and Scanner Support
   community.general.pacman:
@@ -103,13 +111,11 @@
     name: todoist-appimage-integration
     use: paru
 
-- name: Install Teams and Outlook PWA
+- name: Install Teams
   become: false
   kewlfft.aur.aur:
     state: present
-    name:
-      - owa-desktop-bin
-      - teams-for-linux
+    name: teams-for-linux
     use: paru
 
 - name: Install Personal Apps
