@@ -188,4 +188,25 @@
             insertafter: EOF
             line: "FONT_MAP=8859-2"
 
+    - name: Enable Brightnessctl
+      tags: brightness
+      block:
+        - name: Install Brightnessctl Package
+          community.general.pacman:
+            state: present
+            name: brightnessctl
+
+    - name: Sudo Configuration
+      tags: sudo
+      block:
+        - name: Set Sudo Timestamp to Global
+          ansible.builtin.copy:
+            dest: /etc/sudoers.d/99-timestamp-type-global
+            content: |
+              Defaults timestamp_type=global
+              Defaults timestamp_timeout=240
+            owner: root
+            group: root
+            mode: "0660"
+
 # vim: ft=yaml.ansible
