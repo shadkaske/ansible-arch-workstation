@@ -167,4 +167,25 @@
             enabled: true
             state: restarted
             name: bluetooth.service
+
+    - name: Vconsole Configuration
+      tags: vconsole
+      block:
+        - name: Install Terminus Font
+          community.general.pacman:
+            state: present
+            name: terminus-font
+
+        - name: Add Font Config to vconsole.conf
+          ansible.builtin.lineinfile:
+            path: /etc/vconsole.conf
+            insertafter: EOF
+            line: "FONT=ter-p24n"
+
+        - name: Add Font Map Config to vconsole.conf
+          ansible.builtin.lineinfile:
+            path: /etc/vconsole.conf
+            insertafter: EOF
+            line: "FONT_MAP=8859-2"
+
 # vim: ft=yaml.ansible
