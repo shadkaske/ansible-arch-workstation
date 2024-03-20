@@ -9,7 +9,9 @@
     - user_config
     - hyprland
     - neovim
+    - applications
 
+    # TODO: Install Apps
     # TODO: Configure Firewall
     # TODO: Tailscale
     # TODO: Duo
@@ -17,7 +19,6 @@
     # TODO: gnome-polkit
     # TODO: Repos
     # TODO: Configure Snapper
-    # TODO: Install Apps
     # TODO: OneDrive
 
   pre_tasks:

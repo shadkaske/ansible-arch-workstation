@@ -1,0 +1,17 @@
+---
+- name: Install Thunderbird
+  community.general.pacman:
+    state: present
+    name: thunderbird
+
+- name: Install Private Internet Access Client
+  kewlfft.aur.aur:
+    state: present
+    use: paru
+    name: piavpn-bin
+
+- name: Install Steam
+  community.general.pacman:
+    state: present
+    name: steam
+# vim: ft=yaml.ansible

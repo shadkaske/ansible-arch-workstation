@@ -1,0 +1,126 @@
+---
+- name: Set up Firefox
+  block:
+    - name: Install Firefox
+      community.general.pacman:
+        state: present
+        package:
+          - firefox
+          - gnu-free-fonts
+          - noto-fonts
+          - ttf-bitstream-vera
+          - ttf-croscore
+          - ttf-dejavu
+          - ttf-droid
+          - ttf-ibm-plex
+          - ttf-liberation
+          - ttf-mona-sans
+
+    - name: Copy Firefox Policies
+      ansible.builtin.copy:
+        src: files/policies.json
+        dest: /etc/firefox/policies/policies.json
+        owner: root
+        group: root
+        mode: "0644"
+
+- name: Install Chrome
+  become: false
+  kewlfft.aur.aur:
+    state: present
+    use: paru
+    name: google-chrome
+
+- name: Install File Manager
+  community.general.pacman:
+    state: present
+    name: pcmanfm
+
+- name: Install Bitwarden
+  community.general.pacman:
+    state: present
+    name:
+      - bitwarden
+      - bitwarden-cli
+
+- name: Install Printer and Scanner Support
+  community.general.pacman:
+    state: present
+    name:
+      - cups
+      - cups-pdf
+      - hplip
+      - sane
+      - simple-scan
+
+- name: Install IBM iAccess Client
+  become: false
+  kewlfft.aur.aur:
+    state: present
+    use: paru
+    name: iacs
+
+- name: Install DBeaver
+  community.general.pacman:
+    state: present
+    name: dbeaver
+
+- name: Install PHPStorm
+  block:
+    - name: Install PHPStorm Aur Package
+      become: false
+      kewlfft.aur.aur:
+        state: present
+        name: phpstorm
+        use: paru
+
+    - name: Stow ideavim Config
+      ansible.builtin.command:
+        cmd: stow ideavim
+        chdir: "{{ dotfiles_path }}"
+        creates: "{{ config_path }}/ideavim"
+
+- name: Install Remmina
+  community.general.pacman:
+    state: present
+    name:
+      - freerdp
+      - libvncserver
+      - remmina
+      - spice-gtk
+
+- name: Install Todoist
+  become: false
+  kewlfft.aur.aur:
+    state: present
+    name: todoist-appimage-integration
+    use: paru
+
+- name: Install Teams and Outlook PWA
+  become: false
+  kewlfft.aur.aur:
+    state: present
+    name:
+      - owa-desktop-bin
+      - teams-for-linux
+    use: paru
+
+- name: Install Personal Apps
+  tags: personal_apps
+  block:
+    - name: Install Thunderbird
+      community.general.pacman:
+        state: present
+        name: thunderbird
+
+    - name: Install Private Internet Access Client
+      kewlfft.aur.aur:
+        state: present
+        use: paru
+        name: piavpn-bin
+
+    - name: Install Steam
+      community.general.pacman:
+        state: present
+        name: steam
+# vim: ft=yaml.ansible
