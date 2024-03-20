@@ -4,6 +4,7 @@
     state: present
     package:
       - bat
+      - bpytop
       - eza
       - fd
       - lazygit

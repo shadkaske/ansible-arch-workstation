@@ -7,6 +7,7 @@
       - nodejs
       - npm
       - python-pynvim
+      - unzip
 
 - name: Clone my Neovim Config
   become: false
