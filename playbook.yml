@@ -14,12 +14,12 @@
       tags: tailscale
       vars:
         tailscale_up_skip: true
+    - role: duo
+      tags: duo
 
-    # TODO: Configure Firewall
     # TODO: Duo
+    # TODO: Configure Firewall
     # TODO: Repos
-    # TODO: Configure Snapper
-    # TODO: OneDrive
 
   pre_tasks:
     - name: Pacman and Updates

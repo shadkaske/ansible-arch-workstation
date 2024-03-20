@@ -1,0 +1,44 @@
+---
+- name: Install duo_linux Package
+  become: false
+  kewlfft.aur.aur:
+    name: duo_unix
+    state: present
+    use: paru
+
+- name: Install Duo login_duo
+  ansible.builtin.template:
+    src: duo_settings.conf.j2
+    dest: /etc/duo/login_duo.conf
+    owner: nobody
+    group: root
+    mode: "0600"
+
+- name: Install Duo pam_duo
+  ansible.builtin.template:
+    src: duo_settings.conf.j2
+    dest: /etc/duo/pam_duo.conf
+    owner: root
+    group: root
+    mode: "0600"
+
+- name: Update Pam System-Auth Config
+  block:
+    - name: Make a Backup of system-auth
+      ansible.builtin.copy:
+        remote_src: true
+        src: /etc/pam.d/system-auth
+        dest: /root/system-auth-pam.d
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Copy new System-auth Pam.d Configuration
+      ansible.builtin.template:
+        src: system-auth.j2
+        dest: /etc/pam.d/system-auth
+        owner: root
+        group: root
+        mode: "0644"
+
+# vim: ft=yaml.ansible
