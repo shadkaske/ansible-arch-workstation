@@ -41,4 +41,32 @@
         group: root
         mode: "0644"
 
+- name: SSH Configuration Updates
+  tags: ssh
+  block:
+    - name: Remove default archlinux sshd config
+      ansible.builtin.file:
+        path: /etc/ssh/sshd_config.d/99-archlinux.conf
+        state: absent
+
+    - name: Add Duo Compatible sshd Config
+      ansible.builtin.copy:
+        dest: /etc/ssh/sshd_config.d/99-duo.conf
+        content: |
+          PubkeyAuthentication yes
+          PasswordAuthentication no
+          AuthenticationMethods publickey,keyboard-interactive
+          UsePAM yes
+          KbdInteractiveAuthentication yes
+          UseDNS no
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Restart sshd
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
+        enabled: true
+
 # vim: ft=yaml.ansible
