@@ -133,13 +133,6 @@
         name: todoist-appimage-integration
         use: paru
 
-    - name: Install Teams
-      become: false
-      kewlfft.aur.aur:
-        state: present
-        name: teams-for-linux
-        use: paru
-
 - name: Install Personal Apps
   tags: personal_apps
   block:
