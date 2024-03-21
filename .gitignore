@@ -1,3 +1,4 @@
 .become_pass
 .vault_pass
 .venv
+.env

@@ -14,9 +14,8 @@
       tags: tailscale
       vars:
         tailscale_up_skip: true
-        # TODO: Revist duo setup
-    # - role: duo
-    #   tags: duo
+    - role: duo
+      tags: duo
 
     # TODO: Repos
 

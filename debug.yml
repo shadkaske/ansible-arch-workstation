@@ -6,11 +6,7 @@
   become: true
 
   tasks:
-    - name: Install Gitflow
-      community.general.pacman:
-      # become: false
-      # kewlfft.aur.aur:
-        state: present
-        name: imagemagick
-        # use: paru
+    - name: Output Secret
+      ansible.builtin.debug:
+        msg: "{{ duo_secret_key }}"
 # vim: ft=yaml.ansible

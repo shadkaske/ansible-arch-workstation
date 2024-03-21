@@ -54,11 +54,9 @@
         dest: /etc/ssh/sshd_config.d/99-duo.conf
         content: |
           PubkeyAuthentication yes
-          PasswordAuthentication no
-          AuthenticationMethods publickey,keyboard-interactive
-          UsePAM yes
-          KbdInteractiveAuthentication yes
-          UseDNS no
+          PasswordAuthentication yes
+          UsePAM no
+          ForceCommand /usr/sbin/login_duo
         owner: root
         group: root
         mode: "0644"
