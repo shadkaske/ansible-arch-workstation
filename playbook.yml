@@ -166,26 +166,6 @@
             state: restarted
             name: bluetooth.service
 
-    - name: Vconsole Configuration
-      tags: vconsole
-      block:
-        - name: Install Terminus Font
-          community.general.pacman:
-            state: present
-            name: terminus-font
-
-        - name: Add Font Config to vconsole.conf
-          ansible.builtin.lineinfile:
-            path: /etc/vconsole.conf
-            insertafter: EOF
-            line: "FONT=ter-p24n"
-
-        - name: Add Font Map Config to vconsole.conf
-          ansible.builtin.lineinfile:
-            path: /etc/vconsole.conf
-            insertafter: EOF
-            line: "FONT_MAP=8859-2"
-
     - name: Enable Brightnessctl
       tags: brightness
       block:
@@ -246,4 +226,10 @@
             default: deny
             state: enabled
             direction: incoming
+
+        - name: UFW - Enable Firewall
+          ansible.builtin.systemd_service:
+            name: ufw
+            state: restarted
+            enabled: true
 # vim: ft=yaml.ansible
