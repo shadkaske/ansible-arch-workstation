@@ -32,6 +32,7 @@
       - hypridle
       - hyprlock
       - rofi-lbonn-wayland
+      - pasystray-wayland
       - pyprland
 
 - name: Set Up Gtk Themeing
