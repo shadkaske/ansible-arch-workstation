@@ -148,6 +148,7 @@
             name: paru
             use: makepkg
             state: present
+
   tasks:
     - name: Install Bluetooth Support
       tags: bluetooth
@@ -186,50 +187,4 @@
             owner: root
             group: root
             mode: "0660"
-
-    - name: Firewall Configuration
-      tags: firewall
-      block:
-        - name: Install ufw Packages
-          community.general.pacman:
-            state: present
-            name: ufw
-
-        - name: UFW - Disable IPV6
-          ansible.builtin.lineinfile:
-            path: /etc/ufw/ufw.conf
-            line: IPV6=no
-            state: present
-            insertafter: EOF
-
-        - name: UFW - SSH Limit
-          community.general.ufw:
-            rule: limit
-            port: ssh
-            proto: tcp
-            state: enabled
-
-        - name: UFW - Allow SSH Inbound
-          community.general.ufw:
-            rule: allow
-            name: SSH
-            state: enabled
-
-        - name: UFW - Outgoing Allow
-          community.general.ufw:
-            state: enabled
-            direction: outgoing
-            policy: allow
-
-        - name: UFW - Set Default Incoming Policy to Deny
-          community.general.ufw:
-            default: deny
-            state: enabled
-            direction: incoming
-
-        - name: UFW - Enable Firewall
-          ansible.builtin.systemd_service:
-            name: ufw
-            state: restarted
-            enabled: true
 # vim: ft=yaml.ansible
