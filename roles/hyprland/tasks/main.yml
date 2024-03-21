@@ -24,6 +24,7 @@
       - xdg-desktop-portal-hyprland
 
 - name: Install Hypland Aur Packages
+  tags: hyprland_aur
   become: false
   kewlfft.aur.aur:
     state: present
@@ -34,6 +35,7 @@
       - rofi-lbonn-wayland
       - pasystray-wayland
       - pyprland
+      - wlogout
 
 - name: Set Up Gtk Themeing
   tags: gtk_themes
