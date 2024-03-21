@@ -1,0 +1,12 @@
+---
+code_repositories:
+  - git@bitbucket.org:showplacecabinetry/printapp.git
+  - git@github.com:shadkaske/ansible-arch-workstation.git
+  - git@bitbucket.org:showplacecabinetry/iforms.git
+  - git@bitbucket.org:showplacecabinetry/ansible-nginx-app-server.git
+  - git@bitbucket.org:showplacecabinetry/pro-ha-servers.git
+  - git@bitbucket.org:showplacecabinetry/sql-scripts.git
+  - git@bitbucket.org:showplacecabinetry/buckets.git
+  - git@bitbucket.org:showplacecabinetry/documentlookup.git
+  - git@bitbucket.org:showplacecabinetry/editracker.git
+  - git@bitbucket.org:showplacewoodproducts/repcontact.git

@@ -16,8 +16,8 @@
         tailscale_up_skip: true
     - role: duo
       tags: duo
-
-    # TODO: Repos
+    - role: code_repos
+      tags: code
 
   pre_tasks:
     - name: Pacman and Updates
