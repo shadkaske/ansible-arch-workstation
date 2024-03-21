@@ -187,13 +187,20 @@
             mode: "0660"
 
     - name: Clone Code Repositories
-      tags: code
+      tags: code, skip_ansible_lint
       become: false
       ansible.builtin.git:
         repo: "{{ item }}"
-        dest: "/home/{{ ansible_ssh_user }}/Code/{{ item | basename | replace('.git','') }}"
+        dest: "/home/{{ ansible_ssh_user }}/Code/{{ item | basename | replace('.git', '') }}"
         clone: true
         update: false
         accept_newhostkey: true
       with_items: "{{ code_repositories }}"
+
+    - name: Add Extra Groups to User
+      tags: user_groups
+      ansible.builtin.user:
+        name: "{{ ansible_ssh_user }}"
+        groups: uucp
+        append: true
 # vim: ft=yaml.ansible
