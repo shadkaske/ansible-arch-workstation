@@ -59,6 +59,15 @@
     state: present
     name: bitwarden
 
+- name: Install System Utilites
+  tags: utilities
+  community.general.pacman:
+    state: present
+    name:
+      - gparted
+      - gnome-disk-utility
+      - bpytop
+
 - name: Install Work Applications
   tags: work_apps
   block:
