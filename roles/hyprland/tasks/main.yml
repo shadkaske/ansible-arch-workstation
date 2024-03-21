@@ -143,4 +143,47 @@
     name: polkit-gnome
     state: present
 
+- name: Configure SDDM
+  tags: sddm
+  block:
+    - name: Install SDDM
+      community.general.pacman:
+        state: present
+        name: sddm
+
+    - name: Clone Catppuccin Git Repo
+      ansible.builtin.git:
+        repo: https://github.com/catppuccin/sddm.git
+        dest: /tmp/sddm-catppuccin
+        update: false
+        version: main
+
+    - name: Copy Catppuccin Themes
+      ansible.builtin.copy:
+        remote_src: true
+        src: "/tmp/sddm-catppuccin/src/{{ item }}"
+        dest: "/usr/share/sddm/themes/"
+        owner: root
+        group: root
+        mode: "0755"
+      with_items:
+        - catppuccin-frappe
+        - catppuccin-latte
+        - catppuccin-macchiato
+        - catppuccin-mocha
+
+    - name: Create sddm conf.d Directory
+      ansible.builtin.file:
+        state: directory
+        path: /etc/sddm.conf.d
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Create SDDM Conf File for Theme
+      ansible.builtin.copy:
+        dest: /etc/sddm.conf.d/catppuccin-theme.conf
+        content: |
+          [Theme]
+          Current=catppuccin-mocha
 # vim: ft=yaml.ansible
