@@ -16,8 +16,6 @@
         tailscale_up_skip: true
     - role: duo
       tags: duo
-    - role: code_repos
-      tags: code
 
   pre_tasks:
     - name: Pacman and Updates
@@ -187,4 +185,15 @@
             owner: root
             group: root
             mode: "0660"
+
+    - name: Clone Code Repositories
+      tags: code
+      become: false
+      ansible.builtin.git:
+        repo: "{{ item }}"
+        dest: "/home/{{ ansible_ssh_user }}/Code/{{ item | basename | replace('.git','') }}"
+        clone: true
+        update: false
+        accept_newhostkey: true
+      with_items: "{{ code_repositories }}"
 # vim: ft=yaml.ansible
