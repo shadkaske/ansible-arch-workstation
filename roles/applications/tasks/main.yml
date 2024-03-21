@@ -64,23 +64,40 @@
   community.general.pacman:
     state: present
     name:
-      - gparted
       - gnome-disk-utility
+      - minicom
       - bpytop
+
+- name: Install Printer and Scanner Support
+  community.general.pacman:
+    state: present
+    name:
+      - cups
+      - cups-pdf
+      - hplip
+      - sane
+      - simple-scan
+
+- name: Install libreoffice
+  tags: libreoffice
+  community.general.pacman:
+    state: present
+    name:
+      - ttf-caladea
+      - ttf-carlito
+      - ttf-dejavu
+      - ttf-liberation
+      - ttf-linux-libertine-g
+      - adobe-source-code-pro-fonts
+      - adobe-source-sans-fonts
+      - adobe-source-serif-fonts
+      - hunspell
+      - hunspell-en_us
+      - libreoffice-still
 
 - name: Install Work Applications
   tags: work_apps
   block:
-    - name: Install Printer and Scanner Support
-      community.general.pacman:
-        state: present
-        name:
-          - cups
-          - cups-pdf
-          - hplip
-          - sane
-          - simple-scan
-
     - name: Install IBM iAccess Client
       become: false
       kewlfft.aur.aur:
