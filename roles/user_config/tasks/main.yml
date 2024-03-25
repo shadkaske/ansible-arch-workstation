@@ -28,6 +28,10 @@
     cmd: /usr/bin/xdg-user-dirs-update
     creates: "{{ ansible_env.HOME }}/.config/user-dirs.dirs"
 
+- name: Install Flatpaks
+  tags: flatpaks
+  ansible.builtin.include_tasks: flatpak.yml
+
 - name: Clone Dotfiles
   become: false
   ansible.builtin.git:
