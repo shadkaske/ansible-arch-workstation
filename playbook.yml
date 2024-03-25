@@ -18,6 +18,8 @@
       tags: duo
     - role: firewalld
       tags: firewall
+    - role: plymouth
+      tags: plymouth
 
   pre_tasks:
     - name: Pacman and Updates
