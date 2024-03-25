@@ -156,26 +156,26 @@
         state: present
         name: sddm
 
-    - name: Clone Catppuccin Git Repo
-      ansible.builtin.git:
-        repo: https://github.com/catppuccin/sddm.git
-        dest: /tmp/sddm-catppuccin
-        update: false
-        version: main
+    - name: Install Catppuccin SDDM Theme Requirements
+      community.general.pacman:
+        state: present
+        name:
+          - qt5-svg
+          - qt5-quickcontrols2
 
-    - name: Copy Catppuccin Themes
-      ansible.builtin.copy:
+    - name: Get Catppuccin Github Api Object
+      ansible.builtin.set_fact:
+        catppuccin_sddm_obj: "{{ lookup('url', 'https://api.github.com/repos/catppuccin/sddm/releases/latest', split_lines=false) }}"
+
+    - name: Unzip Catppuccin Theme to SDDM
+      ansible.builtin.unarchive:
         remote_src: true
-        src: "/tmp/sddm-catppuccin/src/{{ item }}"
+        src: "{{ item.browser_download_url }}"
         dest: "/usr/share/sddm/themes/"
         owner: root
         group: root
         mode: "0755"
-      with_items:
-        - catppuccin-frappe
-        - catppuccin-latte
-        - catppuccin-macchiato
-        - catppuccin-mocha
+      with_items: "{{ catppuccin_sddm_obj.assets }}"
 
     - name: Create sddm conf.d Directory
       ansible.builtin.file:
@@ -191,4 +191,7 @@
         content: |
           [Theme]
           Current=catppuccin-mocha
+        owner: root
+        group: root
+        mode: "0644"
 # vim: ft=yaml.ansible
