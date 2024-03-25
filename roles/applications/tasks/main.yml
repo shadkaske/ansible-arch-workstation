@@ -67,6 +67,7 @@
       - gnome-disk-utility
       - minicom
       - bpytop
+      - rsync
 
 - name: Install Printer and Scanner Support
   community.general.pacman:
