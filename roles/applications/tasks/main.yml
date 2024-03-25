@@ -48,10 +48,16 @@
       - less
       - man-pages
 
-- name: Install File Manager
+- name: Install File Manager and Utilities
+  tags: desktop_utilities
   community.general.pacman:
     state: present
-    name: pcmanfm
+    name:
+      - gvfs
+      - gvfs-smb
+      - pcmanfm
+      - file-roller
+      - evince
 
 - name: Install Bitwarden
   tags: bitwarden
