@@ -1,0 +1,48 @@
+---
+- name: Install Plymouth Packages
+  community.general.pacman:
+    state: present
+    name: plymouth
+
+- name: Check if grub.cfg Exists
+  tags: grub
+  ansible.builtin.stat:
+    path: /boot/grub/grub.cfg
+  register: grub_config
+
+- name: Update Grub Config When grub.cfg Exists
+  tags: grub
+  when: grub_config.stat.exists
+  block:
+    - name: Set Grub quiet splash if Installed
+      ansible.builtin.lineinfile:
+        regexp: '^GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"'
+        line: 'GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet splash"'
+        path: /etc/default/grub
+
+    - name: Update the grub config
+      tags: skip_ansible_lint
+      ansible.builtin.command:
+        cmd: /usr/bin/grub-mkconfig -o /boot/grub/grub.cfg
+
+    - name: Modify mkcpio.conf to include plymouth
+      ansible.builtin.lineinfile:
+        path: /etc/mkinitcpio.conf
+        backup: true
+        backrefs: true
+        regexp: '(HOOKS=\(base udev autodetect keyboard keymap)(.*\))'
+        line: '\1 plymouth\2'
+
+    - name: Generate Updated initramfs
+      tags: skip_ansible_lint
+      ansible.builtin.command:
+        cmd: /usr/bin/mkinitcpio -P
+
+    - name: Create Systemd Display Manager Service.d Directory
+      ansible.builtin.file:
+        state: directory
+        path: /etc/systemd/system/display-manager.service.d
+        owner: root
+        group: root
+        mode: "0755"
+# vim: ft=yaml.ansible

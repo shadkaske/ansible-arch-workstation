@@ -30,6 +30,23 @@
     creates: "/home/{{ ansible_ssh_user }}/.zshrc"
     chdir: "{{ dotfiles_path }}"
 
+- name: Install Required Packages for Neovim
+  community.general.pacman:
+    state: present
+    package:
+      - neovim
+      - nodejs
+      - npm
+      - python-pynvim
+      - unzip
+
+- name: Stow Neovim Config
+  become: false
+  ansible.builtin.command:
+    cmd: stow --adopt nvim
+    creates: "/home/{{ ansible_ssh_user }}/.config/nvim"
+    chdir: "{{ dotfiles_path }}"
+
 - name: Reset Dofiles git repo
   become: false
   ansible.builtin.command:

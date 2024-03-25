@@ -6,9 +6,10 @@
 
   roles:
     - libvirt
+    - role: docker
+      tags: docker
     - user_config
     - hyprland
-    - neovim
     - applications
     - role: artis3n.tailscale
       tags: tailscale
@@ -18,8 +19,21 @@
       tags: duo
     - role: firewalld
       tags: firewall
+    - role: plymouth
+      tags: plymouth
+    - role: sddm
+      tags: sddm
 
   pre_tasks:
+    - name: Create the Damn Ansible Temp Dir
+      ansible.builtin.file:
+        state: directory
+        recurse: true
+        path: /root/.ansible/tmp
+        owner: root
+        group: root
+        mode: "0775"
+
     - name: Pacman and Updates
       tags: pacman
       block:
@@ -97,38 +111,17 @@
           - lib32-mesa-vdpau
 
     - name: Install PreRequisite Packages
+      tags: prereqs
       community.general.pacman:
         state: present
         package:
+          - bc
           - stow
           - git
           - python
           - zsh
-          - starship
           - tmux
           - unzip
-
-    - name: Enable Docker Support
-      tags: docker
-      block:
-        - name: Install Docker Packages
-          community.general.pacman:
-            state: present
-            package:
-              - docker
-              - docker-compose
-
-        - name: Enable and Start Docker Service
-          ansible.builtin.systemd_service:
-            state: restarted
-            enabled: true
-            name: docker.service
-
-        - name: Add User to Docker Group
-          ansible.builtin.user:
-            name: "{{ ansible_ssh_user }}"
-            groups: docker
-            append: true
 
     - name: Install AUR Helper
       block:
@@ -211,12 +204,4 @@
       community.general.pacman:
         state: present
         name: plasma-desktop
-
-    - name: Set system to boot to Display Manager
-      tags: sddm
-      ansible.builtin.systemd_service:
-        daemon_reload: true
-        service: sddm.service
-        enabled: true
-        state: restarted
 # vim: ft=yaml.ansible
