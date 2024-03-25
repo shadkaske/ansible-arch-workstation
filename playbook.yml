@@ -16,6 +16,8 @@
         tailscale_up_skip: true
     - role: duo
       tags: duo
+    - role: firewalld
+      tags: firewall
 
   pre_tasks:
     - name: Pacman and Updates
@@ -203,24 +205,4 @@
         name: "{{ ansible_ssh_user }}"
         groups: uucp
         append: true
-
-    - name: Firewalld and Docker
-      tags: firewall
-      block:
-        - name: Install firewalld
-          community.general.pacman:
-            state: present
-            name: firewalld
-
-        - name: Enable and Start Firewalld
-          ansible.builtin.systemd_service:
-            name: firewalld
-            state: restarted
-            enabled: true
-
-        - name: Restart Docker Service
-          ansible.builtin.systemd_service:
-            name: docker.service
-            enabled: true
-            state: restarted
 # vim: ft=yaml.ansible
