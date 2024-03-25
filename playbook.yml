@@ -205,4 +205,10 @@
         name: "{{ ansible_ssh_user }}"
         groups: uucp
         append: true
+
+    - name: Install Basic Plasma Desktop as Fallback
+      tags: plasma_desktop
+      community.general.pacman:
+        state: present
+        name: plasma-desktop
 # vim: ft=yaml.ansible
