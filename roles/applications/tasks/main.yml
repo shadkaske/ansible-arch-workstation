@@ -71,8 +71,10 @@
     state: present
     name:
       - gnome-disk-utility
+      - bind
       - minicom
       - bpytop
+      - rsync
 
 - name: Install Printer and Scanner Support
   community.general.pacman:

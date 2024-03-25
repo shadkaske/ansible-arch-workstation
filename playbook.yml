@@ -16,6 +16,8 @@
         tailscale_up_skip: true
     - role: duo
       tags: duo
+    - role: firewalld
+      tags: firewall
 
   pre_tasks:
     - name: Pacman and Updates
