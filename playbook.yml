@@ -211,4 +211,12 @@
       community.general.pacman:
         state: present
         name: plasma-desktop
+
+    - name: Set system to boot to Display Manager
+      tags: sddm
+      ansible.builtin.systemd_service:
+        daemon_reload: true
+        service: sddm.service
+        enabled: true
+        state: restarted
 # vim: ft=yaml.ansible
