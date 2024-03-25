@@ -65,6 +65,7 @@
     state: present
     name:
       - gnome-disk-utility
+      - bind
       - minicom
       - bpytop
       - rsync
