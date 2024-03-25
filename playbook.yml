@@ -102,11 +102,11 @@
         package:
           - stow
           - git
-          - gitflow-avh
           - python
           - zsh
           - starship
           - tmux
+          - unzip
 
     - name: Enable Docker Support
       tags: docker

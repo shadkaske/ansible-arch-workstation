@@ -162,6 +162,7 @@
         name:
           - qt5-svg
           - qt5-quickcontrols2
+          - unzip
 
     - name: Get Catppuccin Github Api Object
       ansible.builtin.set_fact:

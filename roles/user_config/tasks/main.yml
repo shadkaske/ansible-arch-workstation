@@ -55,4 +55,8 @@
     append: true
     shell: /bin/zsh
 
+- name: Install User Aur Packages
+  kewlfft.aur.aur:
+    state: present
+    name: gitflow-avh
 # vim: ft=yaml.ansible
