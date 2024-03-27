@@ -19,4 +19,87 @@
     enabled: true
     name: gdm.service
 
+- name: Configure Gnome Dconf Settings
+  tags: dconf
+  become: false
+  block:
+    - name: Ensure Dconf Module Packages are Available
+      become: true
+      community.general.pacman:
+        state: present
+        name:
+          - dbus
+          - dconf
+          - python-psutil
+
+    - name: Set default color scheme to dark
+      community.general.dconf:
+        key: "/org/gnome/desktop/interface/color-scheme"
+        value: "'prefer-dark'"
+        state: present
+
+    - name: Set default close window shortcut keymap
+      community.general.dconf:
+        key: "/org/gnome/desktop/wm/keybindings/close"
+        value: "['<Super>q']"
+        state: present
+
+    - name: Set Static Workspaces
+      community.general.dconf:
+        key: "/org/gnome/mutter/dynamic-workspaces"
+        value: false
+        state: present
+
+    - name: Set Static Workspaces to 5
+      community.general.dconf:
+        key: "/org/gnome/desktop/wm/preferences/num-workspaces"
+        value: "5"
+        state: present
+
+    - name: Set Move Window to Workspace Keymaps
+      community.general.dconf:
+        key: "/org/gnome/desktop/wm/keybindings/move-to-workspace-{{ item }}"
+        value: "['<Shift><Super>{{ item }}']"
+        state: present
+      with_sequence: start=1 end=5
+
+    - name: Disable Switch to Application Keymaps
+      community.general.dconf:
+        key: "/org/gnome/shell/keybindings switch-to-application-{{ item }}"
+        value: "['']"
+        state: present
+      with_sequence: start=1 end=9
+
+    - name: Set Change to Workspace Keymaps
+      community.general.dconf:
+        key: "/org/gnome/desktop/wm/keybindings/switch-to-workspace-{{ item }}"
+        value: "['<Super>{{ item }}']"
+        state: present
+      with_sequence: start=1 end=5
+
+    - name: Set caps lock to additional control key
+      community.general.dconf:
+        key: "/org/gnome/desktop/input-sources/xkb-options"
+        value: "['terminate:ctrl_alt_bksp', 'lv3:ralt_switch', 'caps:ctrl_modifier']"
+        state: present
+
+    - name: Set Custom Keybinding for Kitty
+      block:
+        - name: Set Kitty Keymap Name
+          community.general.dconf:
+            key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/name"
+            value: "'Kitty'"
+            state: present
+
+        - name: Set Kitty Keymap Command
+          community.general.dconf:
+            key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/command"
+            value: "'kitty'"
+            state: present
+
+        - name: Set Kitty Keymap Binding
+          community.general.dconf:
+            key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/binding"
+            value: "'<Super>Return'"
+            state: present
 # vim: ft=yaml.ansible
