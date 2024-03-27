@@ -48,17 +48,6 @@
       - less
       - man-pages
 
-- name: Install File Manager and Utilities
-  tags: desktop_utilities
-  community.general.pacman:
-    state: present
-    name:
-      - gvfs
-      - gvfs-smb
-      - pcmanfm
-      - file-roller
-      - evince
-
 - name: Install Bitwarden
   tags: bitwarden
   community.general.pacman:
@@ -160,7 +149,7 @@
 
 - name: Install Personal Apps
   tags: personal_apps
-  when: system_type == personal
+  when: system_type == "personal"
   block:
     - name: Install Thunderbird
       community.general.pacman:

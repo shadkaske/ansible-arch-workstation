@@ -39,6 +39,17 @@
       - pyprland
       - wlogout
 
+- name: Install File Manager and Utilities
+  tags: desktop_utilities
+  community.general.pacman:
+    state: present
+    name:
+      - gvfs
+      - gvfs-smb
+      - pcmanfm
+      - file-roller
+      - evince
+
 - name: Set Up Gtk Themeing
   tags: gtk_themes
   block:
