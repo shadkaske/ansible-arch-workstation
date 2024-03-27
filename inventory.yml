@@ -4,11 +4,11 @@ arch:
       ansible_host: localhost
       ansible_connection: local
       system_type: "laptop"
-      enable_duo: false
+      enable_duo: true
     test_vm:
       ansible_host: 192.168.122.220
       system_type: "laptop"
-      enable_duo: false
+      enable_duo: true
     workstaion:
       ansible_host: 192.168.122.220
       system_type: "workstation"
