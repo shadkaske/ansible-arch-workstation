@@ -14,10 +14,10 @@
     - user_config
     - role: hyprland
       tags: hyprland
-      when: system_type != laptop
+      when: system_type != "laptop"
     - role: gnome
       tags: gnome
-      when: system_type == laptop
+      when: system_type == "laptop"
     - applications
     - role: artis3n.tailscale
       tags: tailscale
@@ -42,6 +42,7 @@
         mode: "0775"
 
     - name: Install AMD GPU Packages
+      when: system_type != "laptop"
       community.general.pacman:
         state: present
         package:
