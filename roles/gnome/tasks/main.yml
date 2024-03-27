@@ -1,0 +1,22 @@
+---
+- name: Install Gnome Desktop
+  community.general.pacman:
+    state: present
+    name: gnome
+
+- name: Install Gnome Utilities
+  community.general.pacman:
+    state: present
+    name:
+      - eog
+      - file-roller
+      - gnome-tweaks
+      - seahorse
+      - dconf-editor
+
+- name: Enable GDM Display Manager
+  ansible.builtin.service:
+    enabled: true
+    name: gdm.service
+
+# vim: ft=yaml.ansible

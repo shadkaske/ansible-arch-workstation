@@ -12,6 +12,9 @@
     - role: hyprland
       tags: hyprland
       when: system_type != laptop
+    - role: gnome
+      tags: gnome
+      when: system_type == laptop
     - applications
     - role: artis3n.tailscale
       tags: tailscale
