@@ -2,6 +2,7 @@ arch:
   hosts:
     libvirt:
       ansible_host: 192.168.122.220
+      system_type: workstation
     # local:
     #   ansible_host: localhost
     #   ansible_connection: local

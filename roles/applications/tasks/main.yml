@@ -160,6 +160,7 @@
 
 - name: Install Personal Apps
   tags: personal_apps
+  when: system_type == personal
   block:
     - name: Install Thunderbird
       community.general.pacman:

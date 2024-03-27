@@ -9,7 +9,9 @@
     - role: docker
       tags: docker
     - user_config
-    - hyprland
+    - role: hyprland
+      tags: hyprland
+      when: system_type != laptop
     - applications
     - role: artis3n.tailscale
       tags: tailscale
@@ -17,6 +19,7 @@
         tailscale_up_skip: true
     - role: duo
       tags: duo
+      when: enable_duo
     - role: firewalld
       tags: firewall
     - role: plymouth
@@ -198,10 +201,4 @@
         name: "{{ ansible_ssh_user }}"
         groups: uucp
         append: true
-
-    - name: Install Basic Plasma Desktop as Fallback
-      tags: plasma_desktop
-      community.general.pacman:
-        state: present
-        name: plasma-desktop
 # vim: ft=yaml.ansible
