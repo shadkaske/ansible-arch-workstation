@@ -123,7 +123,9 @@
           become: false
           kewlfft.aur.aur:
             state: present
-            name: phpstorm
+            name:
+              - phpstorm-jre
+              - phpstorm
             use: paru
 
         - name: Stow ideavim Config
@@ -140,13 +142,6 @@
           - libvncserver
           - remmina
           - spice-gtk
-
-    - name: Install Todoist
-      become: false
-      kewlfft.aur.aur:
-        state: present
-        name: todoist-appimage-integration
-        use: paru
 
 - name: Install Personal Apps
   tags: personal_apps
