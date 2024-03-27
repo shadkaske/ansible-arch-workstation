@@ -18,7 +18,8 @@
     - role: gnome
       tags: gnome
       when: system_type == "laptop"
-    - applications
+    - role: applications
+      tags: applications
     - role: artis3n.tailscale
       tags: tailscale
       vars:
