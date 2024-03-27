@@ -12,6 +12,7 @@
       - file-roller
       - gnome-tweaks
       - seahorse
+      - wofi
       - dconf-editor
 
 - name: Enable GDM Display Manager
@@ -81,6 +82,12 @@
       community.general.dconf:
         key: "/org/gnome/desktop/input-sources/xkb-options"
         value: "['terminate:ctrl_alt_bksp', 'lv3:ralt_switch', 'caps:ctrl_modifier']"
+        state: present
+
+    - name: Change Monitor Switch Shortcut
+      community.general.dconf:
+        key: "/org/gnome/mutter/keybindings/switch-monitor"
+        value: "['<Super><Shift>p', 'XF86Display']"
         state: present
 
     - name: Set Custom Keybinding for Kitty
