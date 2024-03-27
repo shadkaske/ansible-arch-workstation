@@ -147,4 +147,59 @@
   community.general.pacman:
     name: polkit-gnome
     state: present
+
+- name: Install, Configure and Enable SDDM
+  tags: sddm
+  block:
+    - name: Install SDDM
+      community.general.pacman:
+        state: present
+        name: sddm
+
+    - name: Install Catppuccin SDDM Theme Requirements
+      community.general.pacman:
+        state: present
+        name:
+          - qt5-svg
+          - qt5-quickcontrols2
+          - unzip
+
+    - name: Get Catppuccin Github Api Object
+      ansible.builtin.set_fact:
+        catppuccin_sddm_obj: "{{ lookup('url', 'https://api.github.com/repos/catppuccin/sddm/releases/latest', split_lines=false) }}"
+
+    - name: Unzip Catppuccin Theme to SDDM
+      ansible.builtin.unarchive:
+        remote_src: true
+        src: "{{ item.browser_download_url }}"
+        dest: "/usr/share/sddm/themes/"
+        owner: root
+        group: root
+        mode: "0755"
+      with_items: "{{ catppuccin_sddm_obj.assets }}"
+
+    - name: Create sddm conf.d Directory
+      ansible.builtin.file:
+        state: directory
+        path: /etc/sddm.conf.d
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Create SDDM Conf File for Theme
+      ansible.builtin.copy:
+        dest: /etc/sddm.conf.d/catppuccin-theme.conf
+        content: |
+          [Theme]
+          Current=catppuccin-mocha
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Set system to boot to Display Manager
+      ansible.builtin.systemd_service:
+        daemon_reload: true
+        service: sddm.service
+        enabled: true
+        state: restarted
 # vim: ft=yaml.ansible
