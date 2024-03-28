@@ -144,4 +144,8 @@
         name: "{{ ansible_ssh_user }}"
         groups: uucp
         append: true
+
+    - name: Restart System
+      ansible.builtin.reboot:
+        reboot_timeout: 300
 # vim: ft=yaml.ansible
