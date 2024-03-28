@@ -14,6 +14,7 @@
       - network-manager-applet
       - nwg-look
       - pavucontrol
+      - pamixer
       - ttf-jetbrains-mono-nerd
       - ttf-nerd-fonts-symbols
       - ttf-nerd-fonts-symbols-common
@@ -32,10 +33,22 @@
     name:
       - hypridle
       - hyprlock
+      - hyprshot
       - rofi-lbonn-wayland
       - pasystray-wayland
       - pyprland
       - wlogout
+
+- name: Install File Manager and Utilities
+  tags: desktop_utilities
+  community.general.pacman:
+    state: present
+    name:
+      - gvfs
+      - gvfs-smb
+      - pcmanfm
+      - file-roller
+      - evince
 
 - name: Set Up Gtk Themeing
   tags: gtk_themes
@@ -146,7 +159,7 @@
     name: polkit-gnome
     state: present
 
-- name: Configure SDDM
+- name: Install, Configure and Enable SDDM
   tags: sddm
   block:
     - name: Install SDDM
@@ -154,26 +167,27 @@
         state: present
         name: sddm
 
-    - name: Clone Catppuccin Git Repo
-      ansible.builtin.git:
-        repo: https://github.com/catppuccin/sddm.git
-        dest: /tmp/sddm-catppuccin
-        update: false
-        version: main
+    - name: Install Catppuccin SDDM Theme Requirements
+      community.general.pacman:
+        state: present
+        name:
+          - qt5-svg
+          - qt5-quickcontrols2
+          - unzip
 
-    - name: Copy Catppuccin Themes
-      ansible.builtin.copy:
+    - name: Get Catppuccin Github Api Object
+      ansible.builtin.set_fact:
+        catppuccin_sddm_obj: "{{ lookup('url', 'https://api.github.com/repos/catppuccin/sddm/releases/latest', split_lines=false) }}"
+
+    - name: Unzip Catppuccin Theme to SDDM
+      ansible.builtin.unarchive:
         remote_src: true
-        src: "/tmp/sddm-catppuccin/src/{{ item }}"
+        src: "{{ item.browser_download_url }}"
         dest: "/usr/share/sddm/themes/"
         owner: root
         group: root
         mode: "0755"
-      with_items:
-        - catppuccin-frappe
-        - catppuccin-latte
-        - catppuccin-macchiato
-        - catppuccin-mocha
+      with_items: "{{ catppuccin_sddm_obj.assets }}"
 
     - name: Create sddm conf.d Directory
       ansible.builtin.file:
@@ -189,4 +203,14 @@
         content: |
           [Theme]
           Current=catppuccin-mocha
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Set system to boot to Display Manager
+      ansible.builtin.systemd_service:
+        daemon_reload: true
+        service: sddm.service
+        enabled: true
+        state: restarted
 # vim: ft=yaml.ansible

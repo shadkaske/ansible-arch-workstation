@@ -5,83 +5,45 @@
   become: true
 
   roles:
-    - libvirt
+    - role: pacman
+      tags: pacman
+    - role: libvirt
+      tags: libvirt
+    - role: docker
+      tags: docker
     - user_config
-    - hyprland
-    - neovim
-    - applications
+    - role: hyprland
+      tags: hyprland
+      when: system_type != "laptop"
+    - role: gnome
+      tags: gnome
+      when: system_type == "laptop"
+    - role: applications
+      tags: applications
     - role: artis3n.tailscale
       tags: tailscale
       vars:
         tailscale_up_skip: true
     - role: duo
       tags: duo
+      when: enable_duo
+    - role: firewalld
+      tags: firewall
+    - role: plymouth
+      tags: plymouth
 
   pre_tasks:
-    - name: Pacman and Updates
-      tags: pacman
-      block:
-        - name: Pacman Use Color
-          ansible.builtin.lineinfile:
-            path: /etc/pacman.conf
-            line: "Color"
-            state: present
-            regexp: "^#Color"
-
-        - name: Pacman Use 5 Parallel Downloads
-          ansible.builtin.lineinfile:
-            path: /etc/pacman.conf
-            line: "ParallelDownloads = 5"
-            state: present
-            regexp: "^#ParallelDownloads.*"
-
-        - name: Ilovecandy
-          ansible.builtin.lineinfile:
-            path: /etc/pacman.conf
-            regexp: "^ILoveCandy"
-            insertafter: "^#UseSyslog"
-            line: "ILoveCandy"
-
-        - name: Install Reflector
-          community.general.pacman:
-            state: present
-            package: reflector
-            update_cache: true
-
-        - name: Set Country Configuration in Reflector
-          ansible.builtin.lineinfile:
-            path: /etc/xdg/reflector/reflector.conf
-            line: --country "United States"
-            state: present
-            regexp: "^# --country.*$"
-
-        - name: Set Sorting for Reflector
-          ansible.builtin.lineinfile:
-            path: /etc/xdg/reflector/reflector.conf
-            line: --sort rate
-            state: present
-            regexp: "--sort age"
-
-        - name: Enable Reflector Timer
-          ansible.builtin.systemd_service:
-            name: reflector.timer
-            state: started
-            enabled: true
-
-        - name: Run Reflector Service to Update Mirrors
-          ansible.builtin.systemd_service:
-            name: reflector.service
-            state: started
-
-        - name: Update Pacman Cache
-          community.general.pacman:
-            update_cache: true
-
-        - name: Update System Packages
-          community.general.pacman:
-            upgrade: true
+    - name: Create the Damn Ansible Temp Dir
+      ansible.builtin.file:
+        state: directory
+        recurse: true
+        path: /root/.ansible/tmp
+        owner: root
+        group: root
+        mode: "0775"
 
     - name: Install AMD GPU Packages
+      when: system_type != "laptop"
       community.general.pacman:
         state: present
         package:
@@ -95,38 +57,17 @@
           - lib32-mesa-vdpau
 
     - name: Install PreRequisite Packages
+      tags: prereqs
       community.general.pacman:
         state: present
         package:
+          - bc
           - stow
           - git
-          - gitflow-avh
           - python
           - zsh
-          - starship
           - tmux
-
-    - name: Enable Docker Support
-      tags: docker
-      block:
-        - name: Install Docker Packages
-          community.general.pacman:
-            state: present
-            package:
-              - docker
-              - docker-compose
-
-        - name: Enable and Start Docker Service
-          ansible.builtin.systemd_service:
-            state: restarted
-            enabled: true
-            name: docker.service
-
-        - name: Add User to Docker Group
-          ansible.builtin.user:
-            name: "{{ ansible_ssh_user }}"
-            groups: docker
-            append: true
+          - unzip
 
     - name: Install AUR Helper
       block:

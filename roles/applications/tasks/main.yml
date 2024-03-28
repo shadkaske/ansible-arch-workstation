@@ -48,11 +48,6 @@
       - less
       - man-pages
 
-- name: Install File Manager
-  community.general.pacman:
-    state: present
-    name: pcmanfm
-
 - name: Install Bitwarden
   tags: bitwarden
   community.general.pacman:
@@ -65,8 +60,11 @@
     state: present
     name:
       - gnome-disk-utility
+      - bind
       - minicom
       - bpytop
+      - rsync
+      - wireshark-qt
 
 - name: Install Printer and Scanner Support
   community.general.pacman:
@@ -125,7 +123,9 @@
           become: false
           kewlfft.aur.aur:
             state: present
-            name: phpstorm
+            name:
+              - phpstorm-jre
+              - phpstorm
             use: paru
 
         - name: Stow ideavim Config
@@ -143,15 +143,9 @@
           - remmina
           - spice-gtk
 
-    - name: Install Todoist
-      become: false
-      kewlfft.aur.aur:
-        state: present
-        name: todoist-appimage-integration
-        use: paru
-
 - name: Install Personal Apps
   tags: personal_apps
+  when: system_type == "personal"
   block:
     - name: Install Thunderbird
       community.general.pacman:

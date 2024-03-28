@@ -1,0 +1,19 @@
+---
+- name: Install Flatpak Package
+  community.general.pacman:
+    state: present
+    name: flatpak
+
+- name: Add the flathub flatpak repository remote
+  community.general.flatpak_remote:
+    name: flathub
+    state: present
+    flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+
+- name: Install Flatpak Applications
+  community.general.flatpak:
+    name: org.gnome.World.PikaBackup
+    remote: flathub
+    state: present
+
+# vim: ft=yaml.ansible
