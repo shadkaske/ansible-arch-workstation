@@ -17,10 +17,13 @@
     group: "{{ ansible_ssh_user }}"
     mode: "0755"
 
-- name: Install xdg-user-dirs Packages
+- name: Install xdg-user-dirs and required packages
+  tags: user_required
   community.general.pacman:
     state: present
-    package: xdg-user-dirs
+    package:
+      - xdg-user-dirs
+      - python-virtualenv
 
 - name: Create User Directories
   become: false
