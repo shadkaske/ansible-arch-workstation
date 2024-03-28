@@ -46,6 +46,15 @@
       - ttf-nerd-fonts-symbols-mono
       - wl-clipboard
 
+- name: Stow Application Configs
+  become: false
+  ansible.builtin.command:
+    cmd: "/usr/bin/stow --adopt {{ item }}"
+    chdir: "{{ dotfiles_path }}"
+    creates: "{{ config_path }}/{{ item }}"
+  with_items:
+    - kitty
+
 - name: Install Chrome
   become: false
   kewlfft.aur.aur:
