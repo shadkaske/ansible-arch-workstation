@@ -11,13 +11,13 @@
       tags: libvirt
     - role: docker
       tags: docker
-    - user_config
+    - role: user_config
+      tags: user_config
     - role: hyprland
       tags: hyprland
-      when: system_type != "laptop"
+      when: system_type != laptop
     - role: gnome
       tags: gnome
-      when: system_type == "laptop"
     - role: applications
       tags: applications
     - role: artis3n.tailscale
