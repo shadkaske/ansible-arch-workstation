@@ -33,6 +33,28 @@
         group: root
         mode: "0644"
 
+- name: Install Kitty and Needed Packages
+  community.general.pacman:
+    state: present
+    name:
+      - kitty
+      - kitty-shell-integration
+      - kitty-terminfo
+      - ttf-jetbrains-mono-nerd
+      - ttf-nerd-fonts-symbols
+      - ttf-nerd-fonts-symbols-common
+      - ttf-nerd-fonts-symbols-mono
+      - wl-clipboard
+
+- name: Stow Application Configs
+  become: false
+  ansible.builtin.command:
+    cmd: "/usr/bin/stow --adopt {{ item }}"
+    chdir: "{{ dotfiles_path }}"
+    creates: "{{ config_path }}/{{ item }}"
+  with_items:
+    - kitty
+
 - name: Install Chrome
   become: false
   kewlfft.aur.aur:

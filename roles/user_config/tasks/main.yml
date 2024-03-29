@@ -17,10 +17,13 @@
     group: "{{ ansible_ssh_user }}"
     mode: "0755"
 
-- name: Install xdg-user-dirs Packages
+- name: Install xdg-user-dirs and required packages
+  tags: user_required
   community.general.pacman:
     state: present
-    package: xdg-user-dirs
+    package:
+      - xdg-user-dirs
+      - python-virtualenv
 
 - name: Create User Directories
   become: false
@@ -31,6 +34,14 @@
 - name: Install Flatpaks
   tags: flatpaks
   ansible.builtin.include_tasks: flatpak.yml
+
+- name: Set authorized keys from Github
+  ignore_errors: true
+  tags: skip_ansible_lint
+  ansible.posix.authorized_key:
+    user: "{{ ansible_ssh_user }}"
+    state: present
+    key: https://github.com/{{ ansible_ssh_user }}.keys
 
 - name: Clone Dotfiles
   become: false
