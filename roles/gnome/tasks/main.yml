@@ -15,6 +15,20 @@
       - wofi
       - dconf-editor
 
+- name: Install Legacy adw-gtk3 Theme
+  become: false
+  kewlfft.aur.aur:
+    state: present
+    name: adw-gtk-theme
+    use: paru
+
+- name: Enable Legacy adw-dark Theme
+  become: false
+  community.general.dconf:
+    key: "/org/gnome/desktop/interface/gtk-theme"
+    value: "'Adw-dark'"
+    state: present
+
 - name: Enable GDM Display Manager
   ansible.builtin.service:
     enabled: true
