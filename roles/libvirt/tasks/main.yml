@@ -13,6 +13,7 @@
       - openbsd-netcat
       - dmidecode
       - libguestfs
+      - swtpm
 
 - name: Configure Libvirt to Use libvirt group
   ansible.builtin.lineinfile:
