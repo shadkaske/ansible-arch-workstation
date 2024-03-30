@@ -4,7 +4,7 @@ arch:
       ansible_host: localhost
       ansible_connection: local
       system_type: "laptop"
-      enable_duo: true
+      enable_duo: false
     test_vm:
       ansible_host: 192.168.122.220
       system_type: "laptop"
