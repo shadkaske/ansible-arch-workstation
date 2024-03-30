@@ -89,14 +89,39 @@
       - wireshark-qt
 
 - name: Install Printer and Scanner Support
-  community.general.pacman:
-    state: present
-    name:
-      - cups
-      - cups-pdf
-      - hplip
-      - sane
-      - simple-scan
+  tags: printing
+  block:
+    - name: Install Printer and Scanner Packages
+      community.general.pacman:
+        state: present
+        name:
+          - cups
+          - cups-pdf
+          - system-config-printer
+          - cups-pk-helper
+          - hplip
+          - sane
+          - simple-scan
+
+    - name: Enable Cups Service
+      ansible.builtin.systemd_service:
+        name: cups.service
+        enabled: true
+        state: started
+
+    - name: Allow passwordless printer admin through Polkit
+      ansible.builtin.copy:
+        dest: /etc/polkit-1/rules.d/49-allow-passwordless-printer-admin.rules
+        content: |
+          polkit.addRule(function(action, subject) {
+            if (action.id == "org.opensuse.cupspkhelper.mechanism.all-edit" &&
+                subject.isInGroup("wheel")){
+                return polkit.Result.YES;
+            }
+          });
+        owner: root
+        group: root
+        mode: "0600"
 
 - name: Install libreoffice
   tags: libreoffice
