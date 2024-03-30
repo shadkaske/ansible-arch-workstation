@@ -56,6 +56,9 @@
 - name: Set Up Shell Configs
   ansible.builtin.include_tasks: shell.yml
 
+- name: Setup Tmux
+  ansible.builtin.include_tasks: tmux.yml
+
 - name: Set Up ranger
   ansible.builtin.include_tasks: ranger.yml
 
@@ -69,5 +72,13 @@
 - name: Install User Aur Packages
   kewlfft.aur.aur:
     state: present
-    name: gitflow-avh
+    name:
+      - gitflow-avh
+      - rofi-lbonn-wayland
+
+- name: Stow Rofi Config
+  ansible.builtin.command:
+    cmd: /usr/bin/stow rofi
+    chdir: "{{ dotfiles_path }}"
+    creates: "{{ config_path }}/rofi"
 # vim: ft=yaml.ansible

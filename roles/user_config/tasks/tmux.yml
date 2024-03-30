@@ -1,0 +1,25 @@
+---
+- name: Install Tmux
+  community.general.pacman:
+    state: present
+    name:
+      - tmux
+
+- name: Install Tmuxinator
+  kewlfft.aur.aur:
+    state: present
+    name: tmuxinator
+    use: paru
+
+- name: Stow Tmux Configs
+  ansible.builtin.command:
+    cmd: /usr/bin/stow tmux
+    chdir: "{{ dotfiles_path }}"
+    creates: "/home/{{ ansible_ssh_user }}/.tmux.conf"
+
+- name: Stow Tmuxinator Configs
+  ansible.builtin.command:
+    cmd: /usr/bin/stow tmuxinator
+    chdir: "{{ dotfiles_path }}"
+    creates: "/home/{{ ansible_ssh_user }}/.config/tmuxinator"
+# vim: ft=yaml.ansible

@@ -12,7 +12,6 @@
       - ranger
       - ripgrep
       - starship
-      - tmux
       - zoxide
       - zsh
 
