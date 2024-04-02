@@ -70,4 +70,16 @@
   kewlfft.aur.aur:
     state: present
     name: gitflow-avh
+
+- name: Clone Code Repositories
+  tags: code, skip_ansible_lint
+  become: false
+  ansible.builtin.git:
+    repo: "{{ item.repo }}"
+    dest: "/home/{{ ansible_ssh_user }}/Code/{{ item.name }}"
+    clone: true
+    update: false
+    version: "{{ item.branch }}"
+    accept_newhostkey: true
+  with_items: "{{ code_repositories }}"
 # vim: ft=yaml.ansible
