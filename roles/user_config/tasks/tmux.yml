@@ -6,6 +6,7 @@
       - tmux
 
 - name: Install Tmuxinator
+  become: false
   kewlfft.aur.aur:
     state: present
     name: tmuxinator
