@@ -41,6 +41,27 @@
     state: present
     key: https://github.com/{{ ansible_ssh_user }}.keys
 
+- name: Intelephense License Key
+  tags: intelephense
+  block:
+    - name: Create intelephense directcory
+      ansible.builtin.file:
+        state: directory
+        path: "/home/{{ ansible_ssh_user }}/intelephense"
+        owner: "{{ ansible_ssh_user }}"
+        group: "{{ ansible_ssh_user }}"
+        mode: "0775"
+
+    - name: Create licence.txt file for Intelephense
+      ansible.builtin.lineinfile:
+        path: "/home/{{ ansible_ssh_user }}/intelephense/licence.txt"
+        create: true
+        line: "{{ intelephense_key }}"
+        owner: "{{ ansible_ssh_user }}"
+        group: "{{ ansible_ssh_user }}"
+        mode: "0664"
+
+
 - name: Clone Dotfiles
   become: false
   ansible.builtin.git:
