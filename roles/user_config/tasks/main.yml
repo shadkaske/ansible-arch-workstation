@@ -61,8 +61,8 @@
         group: "{{ ansible_ssh_user }}"
         mode: "0664"
 
-
 - name: Clone Dotfiles
+  tags: dotfiles
   become: false
   ansible.builtin.git:
     repo: git@github.com:shadkaske/dotfiles
@@ -73,15 +73,19 @@
     version: master
 
 - name: Set Up Shell Configs
+  tags: shell
   ansible.builtin.include_tasks: shell.yml
 
 - name: Setup Tmux
+  tags: tmux
   ansible.builtin.include_tasks: tmux.yml
 
 - name: Set Up ranger
+  tags: ranger
   ansible.builtin.include_tasks: ranger.yml
 
 - name: Set User Shell to Zsh and Add groups
+  tags: shell
   ansible.builtin.user:
     name: '{{ ansible_ssh_user }}'
     groups: docker,libvirt,qemu,libvirt-qemu
@@ -100,15 +104,17 @@
     chdir: '{{ dotfiles_path }}'
     creates: '{{ config_path }}/rofi'
 
-- name: Clone Code Repositories
+- name: Set Up Dev Environments
   tags: code, skip_ansible_lint
-  become: false
-  ansible.builtin.git:
-    repo: '{{ item.repo }}'
-    dest: /home/{{ ansible_ssh_user }}/Code/{{ item.name }}
-    clone: true
-    update: false
-    version: '{{ item.branch }}'
-    accept_newhostkey: true
-  with_items: '{{ code_repositories }}'
+  block:
+    - name: Clone Code Repositories
+      become: false
+      ansible.builtin.git:
+        repo: '{{ item.repo }}'
+        dest: /home/{{ ansible_ssh_user }}/Code/{{ item.name }}
+        clone: true
+        update: false
+        version: '{{ item.branch }}'
+        accept_newhostkey: true
+      with_items: '{{ code_repositories }}'
 # vim: ft=yaml.ansible
