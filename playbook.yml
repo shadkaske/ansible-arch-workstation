@@ -19,9 +19,10 @@
       tags: user_config
     - role: hyprland
       tags: hyprland
-      when: system_type != laptop
-    - role: gnome
-      tags: gnome
+    - role: cinnamon
+      tags: cinnamon
+    - role: sddm
+      tags: display_manager,sddm
     - role: applications
       tags: applications
     - role: artis3n.tailscale
@@ -130,17 +131,6 @@
             owner: root
             group: root
             mode: "0660"
-
-    - name: Clone Code Repositories
-      tags: code, skip_ansible_lint
-      become: false
-      ansible.builtin.git:
-        repo: "{{ item }}"
-        dest: "/home/{{ ansible_ssh_user }}/Code/{{ item | basename | replace('.git', '') }}"
-        clone: true
-        update: false
-        accept_newhostkey: true
-      with_items: "{{ code_repositories }}"
 
     - name: Add Extra Groups to User
       tags: user_groups

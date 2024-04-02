@@ -3,33 +3,31 @@
   ansible.builtin.file:
     state: directory
     recurse: true
-    path: "{{ share_path }}"
-    owner: "{{ ansible_ssh_user }}"
-    group: "{{ ansible_ssh_user }}"
-    mode: "0755"
+    path: '{{ share_path }}'
+    owner: '{{ ansible_ssh_user }}'
+    group: '{{ ansible_ssh_user }}'
+    mode: '0755'
 
 - name: Ensure Local Bin Exists
   ansible.builtin.file:
     state: directory
     recurse: true
-    path: "{{ bin_path }}"
-    owner: "{{ ansible_ssh_user }}"
-    group: "{{ ansible_ssh_user }}"
-    mode: "0755"
+    path: '{{ bin_path }}'
+    owner: '{{ ansible_ssh_user }}'
+    group: '{{ ansible_ssh_user }}'
+    mode: '0755'
 
 - name: Install xdg-user-dirs and required packages
   tags: user_required
   community.general.pacman:
     state: present
-    package:
-      - xdg-user-dirs
-      - python-virtualenv
+    package: [xdg-user-dirs, python-virtualenv]
 
 - name: Create User Directories
   become: false
   ansible.builtin.command:
     cmd: /usr/bin/xdg-user-dirs-update
-    creates: "{{ ansible_env.HOME }}/.config/user-dirs.dirs"
+    creates: '{{ ansible_env.HOME }}/.config/user-dirs.dirs'
 
 - name: Install Flatpaks
   tags: flatpaks
@@ -39,7 +37,7 @@
   ignore_errors: true
   tags: skip_ansible_lint
   ansible.posix.authorized_key:
-    user: "{{ ansible_ssh_user }}"
+    user: '{{ ansible_ssh_user }}'
     state: present
     key: https://github.com/{{ ansible_ssh_user }}.keys
 
@@ -47,7 +45,7 @@
   become: false
   ansible.builtin.git:
     repo: git@github.com:shadkaske/dotfiles
-    dest: "{{ dotfiles_path }}"
+    dest: '{{ dotfiles_path }}'
     update: true
     accept_hostkey: true
     force: true
@@ -64,7 +62,7 @@
 
 - name: Set User Shell to Zsh and Add groups
   ansible.builtin.user:
-    name: "{{ ansible_ssh_user }}"
+    name: '{{ ansible_ssh_user }}'
     groups: docker,libvirt,qemu,libvirt-qemu
     append: true
     shell: /bin/zsh
@@ -72,13 +70,23 @@
 - name: Install User Aur Packages
   kewlfft.aur.aur:
     state: present
-    name:
-      - gitflow-avh
-      - rofi-lbonn-wayland
+    name: [gitflow-avh, rofi-lbonn-wayland]
 
 - name: Stow Rofi Config
   ansible.builtin.command:
     cmd: /usr/bin/stow rofi
-    chdir: "{{ dotfiles_path }}"
-    creates: "{{ config_path }}/rofi"
+    chdir: '{{ dotfiles_path }}'
+    creates: '{{ config_path }}/rofi'
+
+- name: Clone Code Repositories
+  tags: code, skip_ansible_lint
+  become: false
+  ansible.builtin.git:
+    repo: '{{ item.repo }}'
+    dest: /home/{{ ansible_ssh_user }}/Code/{{ item.name }}
+    clone: true
+    update: false
+    version: '{{ item.branch }}'
+    accept_newhostkey: true
+  with_items: '{{ code_repositories }}'
 # vim: ft=yaml.ansible
