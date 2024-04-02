@@ -200,6 +200,7 @@
         name: thunderbird
 
     - name: Install Private Internet Access Client
+      become: false
       kewlfft.aur.aur:
         state: present
         use: paru

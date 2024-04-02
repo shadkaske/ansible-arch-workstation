@@ -68,6 +68,7 @@
     shell: /bin/zsh
 
 - name: Install User Aur Packages
+  become: false
   kewlfft.aur.aur:
     state: present
     name: [gitflow-avh, rofi-lbonn-wayland]
