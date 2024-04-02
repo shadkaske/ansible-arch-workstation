@@ -6,9 +6,9 @@ arch:
       system_type: "laptop"
       enable_duo: true
     test_vm:
-      ansible_host: 192.168.122.220
+      ansible_host: 192.168.122.27
       system_type: "laptop"
-      enable_duo: true
+      enable_duo: false
     workstaion:
       ansible_host: 192.168.122.220
       system_type: "workstation"
