@@ -1,0 +1,19 @@
+---
+- name: Install Cinnamon Desktop
+  community.general.pacman:
+    state: present
+    name:
+      - cinnamon
+      - system-config-printer
+      - gnome-keyring
+      - blueberry
+      - metacity
+
+- name: Install Gnome Utilities
+  community.general.pacman:
+    state: present
+    name:
+      - file-roller
+      - seahorse
+      - dconf-editor
+# vim: ft=yaml.ansible
