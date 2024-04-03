@@ -1,10 +1,9 @@
 arch:
   hosts:
     laptop:
-      ansible_host: localhost
-      ansible_connection: local
+      ansible_host: 192.168.125.246
       system_type: "laptop"
-      enable_duo: false
+      enable_duo: true
     test_vm:
       ansible_host: 192.168.122.27
       system_type: "laptop"
