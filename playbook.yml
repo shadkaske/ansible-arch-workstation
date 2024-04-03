@@ -6,7 +6,6 @@
 
   # TODO: Add gnome keyring password update to pam.d
   # TODO: Add touchegg package to laptop
-  # TODO: Maybe lets do cinnamon instead of gnome
 
   roles:
     - role: pacman

@@ -8,7 +8,7 @@ arch:
     test_vm:
       ansible_host: 192.168.122.27
       system_type: "laptop"
-      enable_duo: false
+      enable_duo: true
     workstaion:
       ansible_host: 192.168.122.220
       system_type: "workstation"

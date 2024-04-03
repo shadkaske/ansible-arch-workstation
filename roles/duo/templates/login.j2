@@ -1,0 +1,7 @@
+#%PAM-1.0
+
+auth       requisite    pam_nologin.so
+auth       include      system-local-login-duo
+account    include      system-local-login-duo
+session    include      system-local-login-duo
+password   include      system-local-login-duo

@@ -22,49 +22,72 @@
     group: root
     mode: "0600"
 
-- name: Update Pam System-Auth Config
+- name: Create Pam Duo Config
   block:
-    - name: Make a Backup of system-auth
-      ansible.builtin.copy:
-        remote_src: true
-        src: /etc/pam.d/system-auth
-        dest: /root/system-auth-pam.d
-        owner: root
-        group: root
-        mode: "0644"
-
-    - name: Copy new System-auth Pam.d Configuration
+    - name: Install system-login-duo
       ansible.builtin.template:
-        src: system-auth.j2
-        dest: /etc/pam.d/system-auth
+        src: system-login-duo.j2
+        dest: /etc/pam.d/system-login-duo
         owner: root
         group: root
         mode: "0644"
 
-- name: SSH Configuration Updates
-  tags: ssh
-  block:
-    - name: Remove default archlinux sshd config
-      ansible.builtin.file:
-        path: /etc/ssh/sshd_config.d/99-archlinux.conf
-        state: absent
-
-    - name: Add Duo Compatible sshd Config
-      ansible.builtin.copy:
-        dest: /etc/ssh/sshd_config.d/99-duo.conf
-        content: |
-          PubkeyAuthentication yes
-          PasswordAuthentication yes
-          UsePAM no
-          ForceCommand /usr/sbin/login_duo
+    - name: Install system-local-login-duo
+      ansible.builtin.template:
+        src: system-local-login-duo.j2
+        dest: /etc/pam.d/system-local-login-duo
         owner: root
         group: root
         mode: "0644"
 
-    - name: Restart sshd
-      ansible.builtin.service:
-        name: sshd
-        state: restarted
-        enabled: true
+    - name: Install system-auth-duo
+      ansible.builtin.template:
+        src: system-auth-duo.j2
+        dest: /etc/pam.d/system-auth-duo
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Install login pam config
+      ansible.builtin.template:
+        src: login.j2
+        dest: /etc/pam.d/login
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Install sddm pam config
+      ansible.builtin.template:
+        src: sddm.j2
+        dest: /etc/pam.d/sddm
+        owner: root
+        group: root
+        mode: "0644"
+# TODO: Move ssh config out of duo, just need to disable password auth
+# - name: SSH Configuration Updates
+#   tags: ssh
+#   block:
+#     - name: Remove default archlinux sshd config
+#       ansible.builtin.file:
+#         path: /etc/ssh/sshd_config.d/99-archlinux.conf
+#         state: absent
+#
+#     - name: Add Duo Compatible sshd Config
+#       ansible.builtin.copy:
+#         dest: /etc/ssh/sshd_config.d/99-duo.conf
+#         content: |
+#           PubkeyAuthentication yes
+#           PasswordAuthentication yes
+#           UsePAM no
+#           ForceCommand /usr/sbin/login_duo
+#         owner: root
+#         group: root
+#         mode: "0644"
+#
+#     - name: Restart sshd
+#       ansible.builtin.service:
+#         name: sshd
+#         state: restarted
+#         enabled: true
 
 # vim: ft=yaml.ansible
