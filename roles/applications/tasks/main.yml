@@ -163,24 +163,6 @@
         state: present
         name: dbeaver
 
-    - name: Install PHPStorm
-      tags: phpstorm
-      block:
-        - name: Install PHPStorm Aur Package
-          become: false
-          kewlfft.aur.aur:
-            state: present
-            name:
-              - phpstorm-jre
-              - phpstorm
-            use: paru
-
-        - name: Stow ideavim Config
-          ansible.builtin.command:
-            cmd: stow ideavim
-            chdir: "{{ dotfiles_path }}"
-            creates: "{{ config_path }}/ideavim"
-
     - name: Install Remmina
       community.general.pacman:
         state: present
