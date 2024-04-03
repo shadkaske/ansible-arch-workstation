@@ -16,4 +16,44 @@
       - file-roller
       - seahorse
       - dconf-editor
+
+- name: Cinnamon Desktop Setup
+  become: false
+  tags: dconf
+  block:
+    - name: Set Default Wallpaper
+      community.general.dconf:
+        key: /org/cinnamon/desktop/background/picture-uri
+        value: "'file:///usr/share/backgrounds/gnome/drool-l.svg'"
+        state: present
+
+    - name: Set Cursor Theme
+      community.general.dconf:
+        key: /org/gnome/desktop/interface/cursor-theme
+        value: "'Catppuccin-Mocha-Blue-Cursors'"
+        state: present
+
+    - name: Set GTK Theme for Cinnamon
+      community.general.dconf:
+        key: /org/gnome/desktop/interface/gtk-theme
+        value: "'Catppuccin-Mocha-Standard-Blue-Dark'"
+        state: present
+
+    - name: Set Icon theme for Cinnamon
+      community.general.dconf:
+        state: present
+        key: /org/cinnamon/desktop/interface/icon-theme
+        value: "'Papirus-Dark'"
+
+    - name: Set Cinnamon Theme
+      community.general.dconf:
+        state: present
+        key: /org/cinnamon/theme/name
+        value: "'Catppuccin-Mocha-Standard-Blue-Dark'"
+
+    - name: Set Prefered Theme to Dark
+      community.general.dconf:
+        state: present
+        key: /org/x/apps/portal/color-scheme
+        value: "'prefer-dark'"
 # vim: ft=yaml.ansible
