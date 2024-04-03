@@ -16,10 +16,11 @@
       - file-roller
       - seahorse
       - dconf-editor
+      - xclip
 
 - name: Cinnamon Desktop Setup
   become: false
-  tags: dconf
+  tags: dconf, dconf_cinnamon, skip_ansible_lint
   block:
     - name: Set Default Wallpaper
       community.general.dconf:
@@ -56,4 +57,51 @@
         state: present
         key: /org/x/apps/portal/color-scheme
         value: "'prefer-dark'"
+
+    - name: Set Caps Lock to Additional Control
+      tags: skip_ansible_lint
+      community.general.dconf:
+        state: present
+        key: /org/gnome/libgnomekbd/keyboard/options
+        value: "['caps\tcaps:ctrl_modifier']"
+
+    - name: Set Close Window Shortcut for Cinnamon
+      community.general.dconf:
+        state: present
+        key: /org/cinnamon/desktop/keybindings/wm/close
+        value: "['<Alt>F4', '<Super>q']"
+
+    - name: Set kitty as default terminal for Cinnamon
+      community.general.dconf:
+        state: present
+        key: /org/cinnamon/desktop/applications/terminal/exec
+        value: "'kitty'"
+
+    - name: Add Super Enter to launch Terminal in Cinnamon
+      community.general.dconf:
+        state: present
+        key: /org/cinnamon/desktop/keybindings/media-keys/terminal
+        value: "['<Primary><Alt>t', '<Super>Return']"
+
+    - name: Move to Workspace Shortcuts
+      community.general.dconf:
+        state: present
+        key: "/org/cinnamon/desktop/keybindings/wm/switch-to-workspace-{{ item }}"
+        value: "['<Super>{{ item }}']"
+      with_items:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        - 7
+        - 8
+        - 9
+
+    - name: Alt Tab show All Workspaces
+      community.general.dconf:
+        state: present
+        key: /org/cinnamon/alttab-switcher-show-all-workspaces
+        value: "true"
 # vim: ft=yaml.ansible
