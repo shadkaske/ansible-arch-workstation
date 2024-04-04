@@ -123,7 +123,7 @@
       ansible.builtin.lineinfile:
         path: /etc/hosts
         state: present
-        line: "{{ item.domain }}    127.0.0.1"
+        line: "127.0.0.1    {{ item.domain }}"
       when: item.domain != None
       with_items: "{{ code_repositories }}"
 # vim: ft=yaml.ansible
