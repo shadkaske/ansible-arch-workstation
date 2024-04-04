@@ -17,4 +17,8 @@
     name: "{{ ansible_ssh_user }}"
     groups: docker
     append: true
+
+- name: Create Docker proxy network
+  community.docker.docker_network:
+    name: proxy
 # vim: ft=yaml.ansible
