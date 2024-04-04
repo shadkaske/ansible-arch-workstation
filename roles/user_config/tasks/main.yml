@@ -117,4 +117,13 @@
         version: '{{ item.branch }}'
         accept_newhostkey: true
       with_items: '{{ code_repositories }}'
+
+    - name: Set up Hosts Keys for Repositories with Domains
+      tags: hosts_entries
+      ansible.builtin.lineinfile:
+        path: /etc/hosts
+        state: present
+        line: "{{ item.domain }}    127.0.0.1"
+      when: item.domain != None
+      with_items: "{{ code_repositories }}"
 # vim: ft=yaml.ansible

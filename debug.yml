@@ -8,5 +8,7 @@
   tasks:
     - name: Output Secret
       ansible.builtin.debug:
-        msg: "{{ duo_secret_key }}"
+        msg: "{{ item.domain }}"
+      when: item.domain != None
+      with_items: "{{ code_repositories }}"
 # vim: ft=yaml.ansible

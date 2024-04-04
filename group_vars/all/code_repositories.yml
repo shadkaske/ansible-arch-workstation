@@ -1,29 +1,38 @@
 ---
 code_repositories:
-  - repo: git@bitbucket.org:showplacecabinetry/printapp.git
-    name: laravel-printapp
-    branch: develop
-  - repo: git@github.com:shadkaske/ansible-arch-workstation.git
-    name: ansible-arch-workstation
-    branch: main
-  - repo: git@bitbucket.org:showplacecabinetry/iforms.git
-    name: iforms
-    branch: develop
-  - repo: git@bitbucket.org:showplacecabinetry/ansible-nginx-app-server.git
-    name: ansible-nginx-app-server
-    branch: main
-  - repo: git@bitbucket.org:showplacecabinetry/pro-ha-servers.git
-    name: ansible-pro-ha-servers
-    branch: main
   - repo: git@bitbucket.org:showplacecabinetry/sql-scripts.git
     name: sql-scripts
     branch: master
+    domain:
+  - repo: git@bitbucket.org:showplacecabinetry/iforms.git
+    name: iforms
+    branch: develop
+    domain:
+  - repo: git@github.com:shadkaske/ansible-arch-workstation.git
+    name: ansible-arch-workstation
+    branch: main
+    domain:
+  - repo: git@bitbucket.org:showplacecabinetry/ansible-nginx-app-server.git
+    name: ansible-nginx-app-server
+    branch: main
+    domain:
+  - repo: git@bitbucket.org:showplacecabinetry/pro-ha-servers.git
+    name: ansible-pro-ha-servers
+    branch: main
+    domain:
   - repo: git@bitbucket.org:showplacecabinetry/buckets.git
     name: laravel-buckets
     branch: develop
+    domain: buckets.test
   - repo: git@bitbucket.org:showplacecabinetry/documentlookup.git
     name: laravel-documentlookup
     branch: develop
+    domain: documentlookup.test
   - repo: git@bitbucket.org:showplacecabinetry/editracker.git
     name: laravel-editracker
     branch: develop
+    domain: editracker.test
+  - repo: git@bitbucket.org:showplacecabinetry/printapp.git
+    name: laravel-printapp
+    branch: develop
+    domain: printapp.test
