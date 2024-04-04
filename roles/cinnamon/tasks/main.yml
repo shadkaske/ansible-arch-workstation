@@ -9,13 +9,20 @@
       - blueberry
       - metacity
 
-- name: Install Gnome Utilities
+- name: Install GTK Utilities
   community.general.pacman:
     state: present
     name:
       - file-roller
       - seahorse
       - dconf-editor
+
+- name: Install TouchPad Library on Laptop
+  tags: touchegg
+  when: system_type == "laptop"
+  community.general.pacman:
+    state: present
+    name: touchegg
 
 - name: Cinnamon Desktop Setup
   become: false
