@@ -15,11 +15,14 @@
       - zoxide
       - zsh
 
-- name: Install Gitflow
+- name: Install Aur Shell Packages
+  tags: shell_aur_pkgs
   become: false
   kewlfft.aur.aur:
     state: present
-    name: gitflow-avh
+    name:
+      - gitflow-avh
+      - lazydocker
     use: paru
 
 - name: Stow shell configs
