@@ -18,12 +18,28 @@
       - dconf-editor
       - xclip
 
-- name: Install TouchPad Library on Laptop
-  tags: touchegg
+- name: Install Laptop Packages
   when: system_type == "laptop"
-  community.general.pacman:
-    state: present
-    name: touchegg
+  tags: laptop_packages
+  block:
+    - name: Install TouchPad Library on Laptop
+      tags: touchegg
+      community.general.pacman:
+        state: present
+        name: touchegg
+
+    - name: Install TLP
+      tags: tlp
+      community.general.pacman:
+        state: present
+        name: tlp
+
+    - name: Install tlpui
+      tags: tlp
+      kewlfft.aur.aur:
+        state: present
+        name: tlpui
+        use: paru
 
 - name: Cinnamon Desktop Setup
   become: false
